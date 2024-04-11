@@ -1,0 +1,34 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background-color: #333;
+    padding-top: 20px;
+    color: #fff;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+    padding-left: 20px;
+    padding-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.sidebar a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+}
+
+.sidebar a.active {
+    background-color: #555;
+}
+
+.content {
+    margin-left: 250px;
+    padding: 20px;
+}
