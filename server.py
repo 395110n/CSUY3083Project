@@ -1,17 +1,15 @@
 from flask import Flask, render_template, request
 from flask_mysqldb import MySQL
 import pandas as pd
-
 app = Flask(__name__)
-
 app.config["MYSQL_HOST"] = "localhost"
 app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_PASSWORD"] = ""
-app.config["MYSQL_DB"] = "____"
-
-mysql = MySQL(app)
+app.config["MYSQL_DB"] = "usrs"
 
 def runstatement(statement):
+    
+    mysql = MySQL(app)
     cursor = mysql.connection.cursor()
     cursor.execute(statement)
     results = cursor.fetchall()
@@ -26,12 +24,22 @@ def runstatement(statement):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['uname']
-        password = request.form['pwd']
-        app.config["MYSQL_DB"] = "usrs"
-        
+        if 'login' in request.form:
 
+            username = request.form['uname']
+            password = request.form['pwd']
+            df = runstatement(f"call checkUsr('{username}', '{password}')")
+
+            return render_template("test.html", result=df[0])
+        else:
+
+            return render_template("login.html")
+    else:
         return render_template("login.html")
+
+@app.route("/test")
+def test():
+    return render_template("test.html", result=None)
 
 @app.route("/registration")
 def registration():

@@ -129,17 +129,17 @@ delimiter ;
 
 delimiter $$
 
-create or replace function checkUsr (usrID varchar(30), usrPW varchar(64)) 
-    returns boolean deterministic
+drop procedure if exists checkUsr $$
 
+create procedure checkUsr (usrID varchar(30), usrPW varchar(64)) 
 begin
     declare EncodePW varchar(64);
     declare existUsr boolean;
     set EncodePW = SHA2(usrPW, 256);
-    select count(*) into existUsr
+    select count(*) as existsOrNot, permission
     from usrs 
     where usr_ID = usrID and usr_PW = EncodePW;
-    return existUsr;
+    
 end$$
 
-delimiter ; 
+delimiter ;
