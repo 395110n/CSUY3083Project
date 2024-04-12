@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_mysqldb import MySQL
 import pandas as pd
 
@@ -23,9 +23,15 @@ def runstatement(statement):
     cursor.close()
     return df
 
-@app.route("/login")
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template("login.html")
+    if request.method == 'POST':
+        username = request.form['uname']
+        password = request.form['pwd']
+        app.config["MYSQL_DB"] = "usrs"
+        
+
+        return render_template("login.html")
 
 @app.route("/registration")
 def registration():

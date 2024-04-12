@@ -118,12 +118,28 @@ select * on Crime_codes to viewer;
 delimiter $$
 
 create or replace trigger EncodePW
-after insert on usrs
+before insert on usrs
 for each row
 begin
-    declare encodedPW varchar(64);
-    select usr_PW into encodedPW
-    where usr_ID = 
+    SET NEW.usr_PW = SHA2(NEW.usr_PW, 256);
+    
 end$$
 
 delimiter ;
+
+delimiter $$
+
+create or replace function checkUsr (usrID varchar(30), usrPW varchar(64)) 
+    returns boolean deterministic
+
+begin
+    declare EncodePW varchar(64);
+    declare existUsr boolean;
+    set EncodePW = SHA2(usrPW, 256);
+    select count(*) into existUsr
+    from usrs 
+    where usr_ID = usrID and usr_PW = EncodePW;
+    return existUsr;
+end$$
+
+delimiter ; 
