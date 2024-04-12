@@ -114,3 +114,16 @@ select * on Crime_officers,
 select (Officer_ID, FirstName, LastName, Precinct, Badge, Status) on Officers,
 select * on Appeals,
 select * on Crime_codes to viewer;
+
+delimiter $$
+
+create or replace trigger EncodePW
+after insert on usrs
+for each row
+begin
+    declare encodedPW varchar(64);
+    select usr_PW into encodedPW
+    where usr_ID = 
+end$$
+
+delimiter ;
