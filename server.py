@@ -63,7 +63,7 @@ def crime_charges():
     return render_template("crime_charges.html", data=df.to_html())
 
 @app.route("/crime_codes")
-def crime_Codes():
+def crime_codes():
     df = runstatement("SELECT * FROM crime_codes")
     return render_template("crime_codes.html", data=df.to_html())
 
