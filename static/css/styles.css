@@ -1,3 +1,11 @@
+* {
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    background-color: rgb(250, 250, 250);
+}
+
 .sidebar {
     position: fixed;
     top: 0;
@@ -6,19 +14,20 @@
     width: 250px;
     background-color: #333;
     padding-top: 20px;
-    color: #fff;
+    color: rgb(250, 250, 250);
 }
 
 .sidebar h2 {
     margin-top: 0;
     padding-left: 20px;
+    padding-right: 20px;
     padding-bottom: 10px;
     font-size: 1.5rem;
 }
 
 .sidebar a {
     display: block;
-    color: #fff;
+    color: rgb(250, 250, 250);
     text-decoration: none;
     padding: 10px 20px;
     margin-bottom: 10px;
@@ -29,6 +38,6 @@
 }
 
 .content {
-    margin-left: 250px;
+    margin-left: 270px;
     padding: 20px;
 }
