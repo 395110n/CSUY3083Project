@@ -14,6 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
     <!-- Sidebar navigation -->
@@ -34,6 +35,12 @@
     <!-- Main content -->
     <div class="content">
       <h1>Officers</h1>
+      <div class="search-container">
+        <form action="">    <!-- action connects to flask??? -->
+          <input type="text" placeholder="Search.." name="search">
+          <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+      </div>
       {{ data | safe }}
     </div>
   </body>
