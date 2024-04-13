@@ -11,7 +11,7 @@ app.config["MYSQL_UNIX_SOCKET"] = "/Applications/XAMPP/xamppfiles/var/mysql/mysq
 app.config["MYSQL_DB"] = "usrs"
 mysql = MySQL(app)
 
-def runstatement(statement, commit):
+def runstatement(statement, commit=False):
     cursor = mysql.connection.cursor()
     cursor.execute(statement)
     results = cursor.fetchall()
