@@ -134,7 +134,6 @@ drop procedure if exists checkUsr $$
 create procedure checkUsr (usrID varchar(30), usrPW varchar(64)) 
 begin
     declare EncodePW varchar(64);
-    declare existUsr boolean;
     set EncodePW = SHA2(usrPW, 256);
     select count(*) as existsOrNot, permission
     from usrs 

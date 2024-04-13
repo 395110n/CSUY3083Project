@@ -5,15 +5,17 @@ app = Flask(__name__)
 app.config["MYSQL_HOST"] = "localhost"
 app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_PASSWORD"] = ""
+app.config["MYSQL_UNIX_SOCKET"] = "/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock"
 app.config["MYSQL_DB"] = "usrs"
+mysql = MySQL(app)
 
-def runstatement(statement):
+def runstatement(statement, commit=False):
     
-    mysql = MySQL(app)
     cursor = mysql.connection.cursor()
     cursor.execute(statement)
     results = cursor.fetchall()
-    mysql.connection.commit()
+    if commit:
+        mysql.connection.commit()
     df = ""
     if cursor.description:
         column_names = [desc[0] for desc in cursor.description]
@@ -25,17 +27,15 @@ def runstatement(statement):
 def login():
     if request.method == 'POST':
         if 'login' in request.form:
-
             username = request.form['uname']
             password = request.form['pwd']
-            df = runstatement(f"call checkUsr('{username}', '{password}')")
-
-            return render_template("test.html", result=df[0])
-        else:
-
-            return render_template("login.html")
-    else:
-        return render_template("login.html")
+            df = runstatement(f'''call checkUsr('{username}', '{password}')''')
+            print(len(df))
+            if df.iloc[0, 0] != 0:
+                return df.iloc[0, 1]
+            else:
+                return "not correct usr name or password"
+    return render_template("login.html")
 
 @app.route("/test")
 def test():
