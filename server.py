@@ -1,15 +1,17 @@
 from flask import Flask, render_template, request
 from flask_mysqldb import MySQL
 import pandas as pd
+
 app = Flask(__name__)
+
 app.config["MYSQL_HOST"] = "localhost"
 app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_PASSWORD"] = ""
 app.config["MYSQL_DB"] = "usrs"
 
+mysql = MySQL(app)
+
 def runstatement(statement):
-    
-    mysql = MySQL(app)
     cursor = mysql.connection.cursor()
     cursor.execute(statement)
     results = cursor.fetchall()
@@ -45,47 +47,56 @@ def test():
 def registration():
     return render_template("registration.html")
 
-@app.route("/Alias")
-def Alias():
-    return render_template("alias.html")
+@app.route("/alias")
+def alias():
+    df = runstatement("SELECT * FROM alias")
+    return render_template("alias.html", data=df.to_html())
 
-@app.route("/Appeals")
-def Appeals():
-    return render_template("appeals.html")
+@app.route("/appeals")
+def appeals():
+    df = runstatement("SELECT * FROM appeals")
+    return render_template("appeals.html", data=df.to_html())
 
-@app.route("/Criminal_Charges")
-def Criminal_Charges():
-    return render_template("crime_charges.html")
+@app.route("/crime_charges")
+def crime_charges():
+    df = runstatement("SELECT * FROM crime_charges")
+    return render_template("crime_charges.html", data=df.to_html())
 
-@app.route("/Crime_Codes")
-def Crime_Codes():
-    return render_template("crime_codes.html")
+@app.route("/crime_codes")
+def crime_Codes():
+    df = runstatement("SELECT * FROM crime_codes")
+    return render_template("crime_codes.html", data=df.to_html())
 
-@app.route("/Crime_officers")
-def Crime_officers():
-    return render_template("crime_officers.html")
+@app.route("/crime_officers")
+def crime_officers():
+    df = runstatement("SELECT * FROM crime_officers")
+    return render_template("crime_officers.html", data=df.to_html())
 
-@app.route("/Crimes")
-def Crimes():
-    return render_template("crimes.html")
+@app.route("/crimes")
+def crimes():
+    df = runstatement("SELECT * FROM crimes")
+    return render_template("crimes.html", data=df.to_html())
 
-@app.route("/Criminals")
-def Criminals():
-    return render_template("criminals.html")
+@app.route("/criminals")
+def criminals():
+    df = runstatement("SELECT * FROM criminals")
+    return render_template("criminals.html", data=df.to_html())
 
-@app.route("/Prob_officers")
-def Prob_officers():
-    return render_template("prob_officers.html")
+@app.route("/prob_officers")
+def prob_officers():
+    df = runstatement("SELECT * FROM prob_officers")
+    return render_template("prob_officers.html", data=df.to_html())
 
-@app.route("/Officers")
-def Officers():
-    return render_template("officers.html")
+@app.route("/officers")
+def officers():
+    df = runstatement("SELECT * FROM officers")
+    return render_template("officers.html", data=df.to_html())
 
-@app.route("/Sentences")
-def Sentences():
-    return render_template("sentences.html")
+@app.route("/sentences")
+def sentences():
+    df = runstatement("SELECT * FROM sentences")
+    return render_template("sentences.html", data=df.to_html())
 
 
 if __name__ == "__main__":
     app.run(debug=True)
-
