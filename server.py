@@ -10,10 +10,10 @@ app.config["MYSQL_PASSWORD"] = ""
 app.config["MYSQL_UNIX_SOCKET"] = "/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock"
 # look in the XAMPP config file and see if the mysql.sock file has the address /temp/mysql.sock
 # if not, you have to modify it
-app.config["MYSQL_DB"] = "usrs"
+app.config["MYSQL_DB"] = "Usrs"
 mysql = MySQL(app)
 
-def runstatement(statement, commit=False):
+def runstatement(statement, mysql, commit=False):
     cursor = mysql.connection.cursor()
     cursor.execute(statement)
     results = cursor.fetchall()
@@ -32,10 +32,13 @@ def login():
         if 'login' in request.form:
             username = request.form['uname']
             password = request.form['pwd']
-            df = runstatement(f'''call checkUsr('{username}', '{password}')''')
+            df = runstatement(f'''call checkUsr('{username}', '{password}')''', mysql)
             print(len(df))
             if df.iloc[0, 0] != 0:
-                return df.iloc[0, 1]
+                app.config["MYSQL_DB"] = "Criminal_Records"
+                mysql.init_app(app)
+                res = runstatement('''select * from alias''', mysql)
+                return res
             else:
                 return "not correct usr name or password"
     return render_template("login.html")
