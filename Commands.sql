@@ -103,17 +103,17 @@ create table Crime_codes(
     Code_description VARCHAR(30) not null unique
 );
 
-grant
-select * on Alias,
-select (Criminal_ID, FirstName, LastName, V_status, P_status) on Criminals,
-select * on Crimes, 
-select * on Sentences,
-select (Prob_ID, FirstName, LastName, Status) on Prob_officers, 
-select * on Crime_charges, 
-select * on Crime_officers,
-select (Officer_ID, FirstName, LastName, Precinct, Badge, Status) on Officers,
-select * on Appeals,
-select * on Crime_codes to viewer;
+GRANT SELECT ON Alias TO viewer;
+GRANT SELECT (Criminal_ID, FirstName, LastName, V_status, P_status) ON Criminals TO viewer;
+GRANT SELECT ON Crimes TO viewer;
+GRANT SELECT ON Sentences TO viewer;
+GRANT SELECT (Prob_ID, FirstName, LastName, Status) ON Prob_officers TO viewer;
+GRANT SELECT ON Crime_charges TO viewer;
+GRANT SELECT ON Crime_officers TO viewer;
+GRANT SELECT (Officer_ID, FirstName, LastName, Precinct, Badge, Status) ON Officers TO viewer;
+GRANT SELECT ON Appeals TO viewer;
+GRANT SELECT ON Crime_codes TO viewer;
+
 
 delimiter $$
 
@@ -135,7 +135,7 @@ create procedure checkUsr (usrID varchar(30), usrPW varchar(64))
 begin
     declare EncodePW varchar(64);
     set EncodePW = SHA2(usrPW, 256);
-    select count(*) as existsOrNot, permission
+    select count(*) as existsOrNot, usr_ID, firstName, lastName, permission 
     from usrs 
     where usr_ID = usrID and usr_PW = EncodePW;
     

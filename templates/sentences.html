@@ -15,21 +15,38 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      .logout-button {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background-color: #f44336;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          cursor: pointer;
+      }
+  </style>
   </head>
   <body>
     <!-- Sidebar navigation -->
     <div class="sidebar">
       <h2>City Jail Database</h2>
-      <a href="{{ url_for('crimes') }}">Crimes</a>
-      <a href="{{ url_for('criminals') }}">Criminals</a>
-      <a href="{{ url_for('alias') }}">Alias</a>
-      <a href="{{ url_for('sentences') }}" class="active">Sentences</a>
-      <a href="{{ url_for('prob_officers') }}">Probation Officers</a>
-      <a href="{{ url_for('crime_charges') }}">Crime Charges</a>
-      <a href="{{ url_for('crime_officers') }}">Crime Officers</a>
-      <a href="{{ url_for('officers') }}">Officers</a>
-      <a href="{{ url_for('appeals') }}">Appeals</a>
-      <a href="{{ url_for('crime_codes') }}">Crime Codes</a>
+      <a href="{{ url_for('crimes', username=session['username']) }}">Crimes</a>
+      <a href="{{ url_for('criminals', username=session['username']) }}">Criminals</a>
+      <a href="{{ url_for('alias', username=session['username']) }}">Alias</a>
+      <a href="{{ url_for('sentences', username=session['username']) }}" class="active">Sentences</a>
+      <a href="{{ url_for('prob_officers', username=session['username']) }}">Probation Officers</a>
+      <a href="{{ url_for('crime_charges', username=session['username']) }}">Crime Charges</a>
+      <a href="{{ url_for('crime_officers', username=session['username']) }}">Crime Officers</a>
+      <a href="{{ url_for('officers', username=session['username']) }}">Officers</a>
+      <a href="{{ url_for('appeals', username=session['username']) }}">Appeals</a>
+      <a href="{{ url_for('crime_codes', username=session['username']) }}">Crime Codes</a>
+      <a href="{{ url_for('profile', username=session['username']) }}">Profile</a>
     </div>
 
     <!-- Main content -->
@@ -43,5 +60,7 @@
       </div>
       {{ data | safe }}
     </div>
+    <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+
   </body>
 </html>
