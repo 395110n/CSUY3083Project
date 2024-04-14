@@ -9,7 +9,7 @@ What's done:
 3. login 
 
 TODO:
-1. implement register
+1. implement register (Done)
 2. implement search
 
 	For search, need to create a replicate html file for each table and implement return button and show the satisfied rows.
