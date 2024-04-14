@@ -106,7 +106,7 @@
     <div>
       <h1>User Registration</h1>
       <form
-        action="https://brightspace.nyu.edu/content/enforced/264561-SP23_CS-UY_3083_1_B/register.php"
+        action="{{ url_for('registration') }}"
         method="post"
       >
         First name: <input type="text" id="fname" name="fname" required="" />
@@ -117,7 +117,7 @@
         <br />
         Password: <input type="password" id="pwd" name="pwd" required="" />
         <br />
-        <input type="submit" value="Submit" class="btn" />
+        <input type="submit" value="Submit" name="submit" class="btn" />
       </form>
     </div>
 

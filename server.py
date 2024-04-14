@@ -8,7 +8,10 @@ app.secret_key = "04/13/2024"
 app.config["MYSQL_UNIX_SOCKET"] = "/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock"
 # look in the XAMPP config file and see if the mysql.sock file has the address /temp/mysql.sock
 # if not, you have to modify it
+app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_DB"] = "Usrs"
+app.config["MYSQL_PASSWORD"] = ""
+
 mysql = MySQL(app)
 
 viewer = {
@@ -88,14 +91,26 @@ def profile(username):
                     firstname=session.get("firstName"), 
                     lastname=session.get("lastName"))
 
-
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
 
-@app.route("/registration")
+@app.route("/registration", methods=['GET', 'POST'])
 def registration():
+    if 'username' in session:
+        return redirect(url_for('profile', username=session['username']))
+    if request.method == 'POST':
+        if 'submit' in request.form:
+            session["firstName"] = request.form['fname']
+            session["lastName"] = request.form['lname']
+            session["username"] = request.form['uname']
+            session["password"] = request.form['pwd']
+            runstatement("use Usrs", commit= True)
+            runstatement(f"""INSERT INTO Usrs (usr_ID, usr_PW, firstName, lastName) VALUES 
+                         ('{session["username"]}', '{session["password"]}', 
+                         '{session["firstName"]}', '{session["lastName"]}')""", commit=True)
+            return redirect(url_for('login', username=session["username"]))
     return render_template("registration.html")
 
 @app.route("/<username>/alias")
