@@ -130,7 +130,6 @@ def crime_officers(username):
 
 @app.route("/<username>/crimes")
 def crimes(username):
-    
     runstatement('''use Criminal_Records''', commit=True)
     df = runstatement(generateStatementViewer('Crimes', 'select', None, viewer['Crimes']))
     return render_template("crimes.html", data=df.to_html())
