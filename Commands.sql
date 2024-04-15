@@ -103,20 +103,8 @@ create table Crime_codes(
     Code_description VARCHAR(30) not null unique
 );
 
-GRANT SELECT ON Alias TO viewer;
-GRANT SELECT (Criminal_ID, FirstName, LastName, V_status, P_status) ON Criminals TO viewer;
-GRANT SELECT ON Crimes TO viewer;
-GRANT SELECT ON Sentences TO viewer;
-GRANT SELECT (Prob_ID, FirstName, LastName, Status) ON Prob_officers TO viewer;
-GRANT SELECT ON Crime_charges TO viewer;
-GRANT SELECT ON Crime_officers TO viewer;
-GRANT SELECT (Officer_ID, FirstName, LastName, Precinct, Badge, Status) ON Officers TO viewer;
-GRANT SELECT ON Appeals TO viewer;
-GRANT SELECT ON Crime_codes TO viewer;
-
-
+-- Trigger in Usrs
 delimiter $$
-
 create or replace trigger EncodePW
 before insert on usrs
 for each row
@@ -124,13 +112,12 @@ begin
     SET NEW.usr_PW = SHA2(NEW.usr_PW, 256);
     
 end$$
-
 delimiter ;
 
+
+-- Procedure in Usrs
 delimiter $$
-
 drop procedure if exists checkUsr $$
-
 create procedure checkUsr (usrID varchar(30), usrPW varchar(64)) 
 begin
     declare EncodePW varchar(64);
@@ -140,5 +127,4 @@ begin
     where usr_ID = usrID and usr_PW = EncodePW;
     
 end$$
-
 delimiter ;
