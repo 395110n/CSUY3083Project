@@ -18,3 +18,5 @@ TODO:
 
 	For each table should allow insert, modify users
 
+5. setup index page (or change login page to index page)
+
