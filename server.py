@@ -57,15 +57,14 @@ def runstatement(statement, commit=False):
 def generateStatementViewer(table, action, query, attr="*"):
     if isinstance(attr, list):
         attr = ", ".join(attr)
-    
     if action.lower() != "select":
         return pd.DataFrame()
     sql = f"{action.upper()} {attr.upper()} FROM {table.upper()}"
     if query:
-        sql += f"WHERE {query}"
+        sql += f" WHERE {query}"
     return sql
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
@@ -82,7 +81,6 @@ def login():
 
                 return redirect(url_for('profile', username=username))
     return render_template("login.html")
-
 
 @app.route("/<username>/profile")
 def profile(username):
@@ -116,61 +114,121 @@ def registration():
 @app.route("/<username>/alias")
 def alias(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer("Alias", "select", None, viewer["Alias"]))
+    alias_id = request.args.get('alias_id')
+    if alias_id:
+        query = f"Alias_ID = '{alias_id}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
+    df = runstatement(sql)
     return render_template("alias.html", data=df.to_html())
 
 @app.route("/<username>/appeals")
 def appeals(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer("Appeals", 'select', None, viewer["Appeals"]))
+    appeal_id = request.args.get('appeal_id')
+    if appeal_id:
+        query = f"Appeal_ID = '{appeal_id}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Appeals', 'select', query, viewer['Appeals'])
+    df = runstatement(sql)
     return render_template("appeals.html", data=df.to_html())
 
 @app.route("/<username>/crime_charges")
 def crime_charges(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer("Crime_charges", 'select', None, viewer["Crime_charges"]))
+    charge_id = request.args.get('charge_id')
+    if charge_id:
+        query = f"Charge_ID = '{charge_id}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Crime_charges', 'select', query, viewer['Crime_charges'])
+    df = runstatement(sql)
     return render_template("crime_charges.html", data=df.to_html())
 
 @app.route("/<username>/crime_codes")
 def crime_codes(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer('Crime_codes', 'select', None, viewer["Crime_codes"]))
+    crime_code = request.args.get('crime_code')
+    if crime_code:
+        query = f"Crime_code = '{crime_code}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Crime_codes', 'select', query, viewer['Crime_codes'])
+    df = runstatement(sql)
     return render_template("crime_codes.html", data=df.to_html())
 
 @app.route("/<username>/crime_officers")
 def crime_officers(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer('Crime_officers', 'select', None, viewer['Crime_officers']))
+    crime_id = request.args.get('crime_id')
+    if crime_id:
+        query = f"Crime_ID = '{crime_id}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Crime_officers', 'select', query, viewer['Crime_officers'])
+    df = runstatement(sql)
     return render_template("crime_officers.html", data=df.to_html())
 
 @app.route("/<username>/crimes")
 def crimes(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer('Crimes', 'select', None, viewer['Crimes']))
+    crime_id = request.args.get('crime_id')
+    if crime_id:
+        query = f"Crime_ID = '{crime_id}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Crimes', 'select', query, viewer['Crimes'])
+    df = runstatement(sql)
     return render_template("crimes.html", data=df.to_html())
 
 @app.route("/<username>/criminals")
 def criminals(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer('Criminals', 'select', None, viewer['Criminals']))
+    criminal_id = request.args.get('criminal_id')
+    if criminal_id:
+        query = f"Criminal_ID = '{criminal_id}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Criminals', 'select', query, viewer['Criminals'])
+    df = runstatement(sql)
     return render_template("criminals.html", data=df.to_html())
 
 @app.route("/<username>/prob_officers")
 def prob_officers(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer('Prob_officers', 'select', None, viewer["Prob_officers"]))
+    prob_id = request.args.get('prob_id')
+    if prob_id:
+        query = f"Prob_ID = '{prob_id}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Prob_officers', 'select', query, viewer['Prob_officers'])
+    df = runstatement(sql)
     return render_template("prob_officers.html", data=df.to_html())
 
 @app.route("/<username>/officers")
 def officers(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer('Officers', 'select', None, viewer['Officers']))
+    officer_id = request.args.get('officer_id')
+    if officer_id:
+        query = f"Officer_ID = '{officer_id}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Officers', 'select', query, viewer['Officers'])
+    df = runstatement(sql)
     return render_template("officers.html", data=df.to_html())
 
 @app.route("/<username>/sentences")
 def sentences(username):
     runstatement('''use Criminal_Records''', commit=True)
-    df = runstatement(generateStatementViewer('Sentences', 'select', None, viewer['Sentences']))
+    sentence_id = request.args.get('sentence_id')
+    if sentence_id:
+        query = f"Sentence_ID = '{sentence_id}'"
+    else:
+        query = None
+    sql = generateStatementViewer('Sentences', 'select', query, viewer['Sentences'])
+    df = runstatement(sql)
     return render_template("sentences.html", data=df.to_html())
 
 

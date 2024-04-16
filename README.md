@@ -10,7 +10,7 @@ What's done:
 
 TODO:
 1. implement register (Done)
-2. implement search
+2. implement search (Done)
 
 	For search, need to create a replicate html file for each table and implement return button and show the satisfied rows.
 
@@ -18,5 +18,5 @@ TODO:
 
 	For each table should allow insert, modify users
 
-5. setup index page (or change login page to index page)
+5. setup index page (or change login page to index page) (Done)
 
