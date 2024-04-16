@@ -115,7 +115,7 @@ end$$
 delimiter ;
 
 
--- Procedure in Usrs
+-- Procedure for check Login
 delimiter $$
 drop procedure if exists checkUsr $$
 create procedure checkUsr (usrID varchar(30), usrPW varchar(64)) 
@@ -126,5 +126,16 @@ begin
     from usrs 
     where usr_ID = usrID and usr_PW = EncodePW;
     
+end$$
+delimiter ;
+
+-- Procedure for check Register
+delimiter $$
+drop procedure if exists checkRegister $$
+create procedure checkRegister (usrID varchar(30))
+begin   
+    select firstName, lastName
+    from usrs
+    where usr_ID = usrID;
 end$$
 delimiter ;

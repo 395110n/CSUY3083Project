@@ -100,15 +100,22 @@ def registration():
         return redirect(url_for('profile', username=session['username']))
     if request.method == 'POST':
         if 'submit' in request.form:
-            session["firstName"] = request.form['fname']
-            session["lastName"] = request.form['lname']
-            session["username"] = request.form['uname']
-            session["password"] = request.form['pwd']
-            runstatement("use Usrs", commit= True)
-            runstatement(f"""INSERT INTO Usrs (usr_ID, usr_PW, firstName, lastName) VALUES 
-                         ('{session["username"]}', '{session["password"]}', 
-                         '{session["firstName"]}', '{session["lastName"]}')""", commit=True)
-            return redirect(url_for('login', username=session["username"]))
+            df = runstatement(f'''call checkRegister('{request.form['uname']}')''')
+            # if uname not unique, returns firstname, lastname
+            if len(df) == 0:
+                session["firstName"] = request.form['fname']
+                session["lastName"] = request.form['lname']
+                session["username"] = request.form['uname']
+                session["password"] = request.form['pwd']
+                runstatement("use Usrs", commit= True)
+                runstatement(f"""INSERT INTO Usrs (usr_ID, usr_PW, firstName, lastName) VALUES 
+                            ('{session["username"]}', '{session["password"]}', 
+                            '{session["firstName"]}', '{session["lastName"]}')""", commit=True)
+                return redirect(url_for('login', username=session["username"]))
+            # else: 
+            # TODO: should add a pop up for failing registration and 
+            # show existing user's firstname, lastname
+
     return render_template("registration.html")
 
 @app.route("/<username>/alias")
