@@ -39,6 +39,18 @@ GRANT SELECT ON Crime_officers TO viewer;
 GRANT SELECT (Officer_ID, FirstName, LastName, Precinct, Badge, Status) ON Officers TO viewer;
 GRANT SELECT ON Appeals TO viewer;
 GRANT SELECT ON Crime_codes TO viewer;
+
+employee previleges:
+GRANT SELECT ON Alias TO employee;
+GRANT SELECT ON Criminals TO employee;
+GRANT SELECT ON Crimes TO employee;
+GRANT SELECT ON Sentences TO employee;
+GRANT SELECT ON Prob_officers TO employee;
+GRANT SELECT ON Crime_charges TO employee;
+GRANT SELECT ON Crime_officers TO employee;
+GRANT SELECT ON Officers TO employee;
+GRANT SELECT ON Appeals TO employee;
+GRANT SELECT ON Crime_codes TO employee;
 '''
 
 def runstatement(statement, commit=False):
