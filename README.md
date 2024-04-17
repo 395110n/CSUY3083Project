@@ -8,6 +8,13 @@ What's done:
 2. implement access to databases with role 'viewer'
 3. login
 4. added check for unique userID
+5. implement register (Done)
+6. implement search (Done)
+	1. Implement return button and show the satisfied rows.
+7. setup index page (or change login page to index page) (Done)
+8. login failure: (Done)
+	1. probably want to add a pop-up that says login failure? 
+9. registration failure (Done)
 
 TODO:
 1. implement register (Done)
