@@ -14,6 +14,16 @@
     />
   </head>
   <body>
+    {% with messages = get_flashed_messages() %}
+    <!-- jinja template, get flashed message -->
+      {% if messages %}
+      <!-- for pop out failure message -->
+          <script>
+            var message = "{{ messages[0]}}";
+            alert(message);
+          </script>
+      {% endif %}
+     {% endwith %}
     <div>
       <h1>Login or register</h1>
       <form action="/" method="post" autocomplete="off">
@@ -31,7 +41,7 @@
 
     <div>
       <form action="/registration" method="get">
-        <input type="submit" value="Register" class="btn" />
+        <input type="submit" value="register" class="btn" />
       </form>
     </div>
   </body>

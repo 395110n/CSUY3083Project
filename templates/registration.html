@@ -14,13 +14,19 @@
     />
   </head>
   <body>
+
     <div>
       <h1>User Registration</h1>
       <form
+<<<<<<< HEAD
+        action="{{ url_for('registration') }}" method="POST" autocomplete="off">
+        <!-- after submit the form, it direct to registration method and use post  -->
+=======
         action="{{ url_for('registration') }}"
         method="post"
         autocomplete="off"
       >
+>>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
         First name: <input type="text" id="fname" name="fname" required="" />
         <br />
         Last name: <input type="text" id="lname" name="lname" required="" />
@@ -33,7 +39,32 @@
         {% if error_message %}
         <p style="color: red">{{ error_message }}</p>
         {% endif %}
+        <!-- Failure to register -->
+        {% if error_message %}
+        <p style="color: red">{{ error_message }}</p>
+        {% endif %}
         <input type="submit" value="Submit" name="submit" class="btn" />
+      </form>
+      <form action="{{url_for('login')}}">
+        <input type="submit" value="Back to Login" name="login" class="btn" />
+      </form>
+      
+    
+
+        {% with messages = get_flashed_messages() %}
+        <!-- jinja template, get flashed message -->
+          {% if messages %}
+          <!-- for pop out failure message -->
+              <script>
+                var message = "{{ messages[0]}}";
+                alert(message);
+              </script>
+          {% endif %}
+         {% endwith %}
+    </div>
+    <div>
+      <form action="/" method="get">
+        <input type="submit" value="Back" class="btn" />
       </form>
     </div>
     <div>
