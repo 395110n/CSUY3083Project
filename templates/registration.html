@@ -17,7 +17,10 @@
     <div>
       <h1>User Registration</h1>
       <form
-        action="{{ url_for('registration') }}" method="post" autocomplete="off">
+        action="{{ url_for('registration') }}"
+        method="post"
+        autocomplete="off"
+      >
         First name: <input type="text" id="fname" name="fname" required="" />
         <br />
         Last name: <input type="text" id="lname" name="lname" required="" />
@@ -26,7 +29,16 @@
         <br />
         Password: <input type="password" id="pwd" name="pwd" required="" />
         <br />
+        <!-- Failure to register -->
+        {% if error_message %}
+        <p style="color: red">{{ error_message }}</p>
+        {% endif %}
         <input type="submit" value="Submit" name="submit" class="btn" />
+      </form>
+    </div>
+    <div>
+      <form action="/" method="get">
+        <input type="submit" value="Back" class="btn" />
       </form>
     </div>
   </body>
