@@ -168,6 +168,8 @@ def alias(username):
         displayMode = 'inline-block'
     else:
         query = None
+
+   
     
     if session["permission"] == "viewer":
         table = viewer['Alias']
@@ -190,9 +192,9 @@ def appeals(username):
         query = None
 
     if session["permission"] == "viewer":
-        table = viewer['Alias']
+        table = viewer['Appeals']
     elif session["permission"] == "employee":
-        table = employee['Alias']
+        table = employee['Appeals']
         
     sql = generateStatementViewer('Appeals', 'select', query, table)
     df = runstatement(sql)
@@ -210,9 +212,9 @@ def crime_charges(username):
         query = None
 
     if session["permission"] == "viewer":
-        table = viewer['Alias']
+        table = viewer['Crime_charges']
     elif session["permission"] == "employee":
-        table = employee['Alias']
+        table = employee['Crime_charges']
 
     sql = generateStatementViewer('Crime_charges', 'select', query, table)
     df = runstatement(sql)
@@ -230,9 +232,9 @@ def crime_codes(username):
         query = None
 
     if session["permission"] == "viewer":
-        table = viewer['Alias']
+        table = viewer['Crime_codes']
     elif session["permission"] == "employee":
-        table = employee['Alias']
+        table = employee['Crime_codes']
         
     sql = generateStatementViewer('Crime_codes', 'select', query, table)
     df = runstatement(sql)
@@ -250,9 +252,9 @@ def crime_officers(username):
         query = None
 
     if session["permission"] == "viewer":
-        table = viewer['Alias']
+        table = viewer['Crime_officers']
     elif session["permission"] == "employee":
-        table = employee['Alias']
+        table = employee['Crime_officers']
 
     sql = generateStatementViewer('Crime_officers', 'select', query, table)
     df = runstatement(sql)
@@ -270,9 +272,9 @@ def crimes(username):
         query = None
 
     if session["permission"] == "viewer":
-        table = viewer['Alias']
+        table = viewer['Crimes']
     elif session["permission"] == "employee":
-        table = employee['Alias']
+        table = employee['Crimes']
 
     sql = generateStatementViewer('Crimes', 'select', query, table)
     df = runstatement(sql)
@@ -297,9 +299,9 @@ def criminals(username):
         query = None
 
     if session["permission"] == "viewer":
-        table = viewer['Alias']
+        table = viewer['Criminals']
     elif session["permission"] == "employee":
-        table = employee['Alias']
+        table = employee['Criminals']
 
     sql = generateStatementViewer('Criminals', 'select', query, table)
     df = runstatement(sql)
@@ -324,9 +326,9 @@ def prob_officers(username):
         query = None
 
     if session["permission"] == "viewer":
-        table = viewer['Alias']
+        table = viewer['Prob_officers']
     elif session["permission"] == "employee":
-        table = employee['Alias']
+        table = employee['Prob_officers']
 
     sql = generateStatementViewer('Prob_officers', 'select', query, table)
     df = runstatement(sql)
@@ -356,9 +358,9 @@ def officers(username):
         query = None
 
     if session["permission"] == "viewer":
-        table = viewer['Alias']
+        table = viewer['Officers']
     elif session["permission"] == "employee":
-        table = employee['Alias']
+        table = employee['Officers']
 
     sql = generateStatementViewer('Officers', 'select', query, table)
     df = runstatement(sql)
@@ -377,9 +379,9 @@ def sentences(username):
         query = None
 
     if session["permission"] == "viewer":
-        table = viewer['Alias']
+        table = viewer['Sentences']
     elif session["permission"] == "employee":
-        table = employee['Alias']
+        table = employee['Sentences']
 
     sql = generateStatementViewer('Sentences', 'select', query, table)
     df = runstatement(sql)
@@ -387,4 +389,4 @@ def sentences(username):
 
 
 if __name__ == "__main__":
-    app.run(host="10.18.158.36",port="8080", debug=True)
+    app.run(debug=True)
