@@ -27,6 +27,19 @@ viewer = {
     'Crime_codes': '*'
 }
 
+employee = {
+    "Alias": "*",
+    "Criminals": "*",
+    'Crimes': "*",
+    'Sentences': "*",
+    'Prob_officers': "*",
+    'Crime_charges': "*", 
+    'Crime_officers': "*",
+    'Officers': "*", 
+    'Appeals': "*",
+    'Crime_codes': "*"
+}
+
 '''
 viewer previleges: 
 GRANT SELECT ON Alias TO viewer;
@@ -155,7 +168,12 @@ def alias(username):
     else:
         query = None
     
-    sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+
+    sql = generateStatementViewer('Alias', 'select', query, table)
     df = runstatement(sql)
     return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode)
 
@@ -169,7 +187,13 @@ def appeals(username):
         displayMode = 'inline-block'
     else:
         query = None
-    sql = generateStatementViewer('Appeals', 'select', query, viewer['Appeals'])
+
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+        
+    sql = generateStatementViewer('Appeals', 'select', query, table)
     df = runstatement(sql)
     return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -183,7 +207,13 @@ def crime_charges(username):
         displayMode = 'inline-block'
     else:
         query = None
-    sql = generateStatementViewer('Crime_charges', 'select', query, viewer['Crime_charges'])
+
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+
+    sql = generateStatementViewer('Crime_charges', 'select', query, table)
     df = runstatement(sql)
     return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -197,7 +227,13 @@ def crime_codes(username):
         displayMode = 'inline-block'
     else:
         query = None
-    sql = generateStatementViewer('Crime_codes', 'select', query, viewer['Crime_codes'])
+
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+        
+    sql = generateStatementViewer('Crime_codes', 'select', query, table)
     df = runstatement(sql)
     return render_template("crime_codes.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -211,7 +247,13 @@ def crime_officers(username):
         displayMode = 'inline-block'
     else:
         query = None
-    sql = generateStatementViewer('Crime_officers', 'select', query, viewer['Crime_officers'])
+
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+
+    sql = generateStatementViewer('Crime_officers', 'select', query, table)
     df = runstatement(sql)
     return render_template("crime_officers.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -225,7 +267,13 @@ def crimes(username):
         query = f"Crime_ID = '{crime_id}'"
     else:
         query = None
-    sql = generateStatementViewer('Crimes', 'select', query, viewer['Crimes'])
+
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+
+    sql = generateStatementViewer('Crimes', 'select', query, table)
     df = runstatement(sql)
     return render_template("crimes.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -247,7 +295,12 @@ def criminals(username):
     else:
         query = None
 
-    sql = generateStatementViewer('Criminals', 'select', query, viewer['Criminals'])
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+
+    sql = generateStatementViewer('Criminals', 'select', query, table)
     df = runstatement(sql)
     return render_template("criminals.html", data=df.to_html(classes="styled-table", index=False), show=show)
 
@@ -269,7 +322,12 @@ def prob_officers(username):
     else:
         query = None
 
-    sql = generateStatementViewer('Prob_officers', 'select', query, viewer['Prob_officers'])
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+
+    sql = generateStatementViewer('Prob_officers', 'select', query, table)
     df = runstatement(sql)
     return render_template("prob_officers.html", data=df.to_html(classes="styled-table", index=False), show=display)
 
@@ -296,7 +354,12 @@ def officers(username):
     else:
         query = None
 
-    sql = generateStatementViewer('Officers', 'select', query, viewer['Officers'])
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+
+    sql = generateStatementViewer('Officers', 'select', query, table)
     df = runstatement(sql)
     return render_template("officers.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -311,7 +374,13 @@ def sentences(username):
         query = f"Sentence_ID = '{sentence_id}'"
     else:
         query = None
-    sql = generateStatementViewer('Sentences', 'select', query, viewer['Sentences'])
+
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+
+    sql = generateStatementViewer('Sentences', 'select', query, table)
     df = runstatement(sql)
     return render_template("sentences.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
