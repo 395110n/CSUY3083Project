@@ -14,17 +14,32 @@ app.config["MYSQL_PASSWORD"] = ""
 
 mysql = MySQL(app)
 
-viewer = {
-    "Alias": "*",
-    "Criminals": ["FirstName", 'LastName', 'V_status', 'P_status'],
-    'Crimes': '*',
-    'Sentences': '*',
-    'Prob_officers': ['FirstName', 'LastName', 'Status'],
-    'Crime_charges': "*", 
-    'Crime_officers': "*",
-    'Officers': ['FirstName', 'LastName', 'Precinct', 'Badge', 'Status'], 
-    'Appeals': "*",
-    'Crime_codes': '*'
+permissions = {
+    "viewer": {
+        "Alias": "*",
+        "Criminals": ["FirstName", 'LastName', 'V_status', 'P_status'],
+        'Crimes': '*',
+        'Sentences': '*',
+        'Prob_officers': ['FirstName', 'LastName', 'Status'],
+        'Crime_charges': "*", 
+        'Crime_officers': "*",
+        'Officers': ['FirstName', 'LastName', 'Precinct', 'Badge', 'Status'], 
+        'Appeals': "*",
+        'Crime_codes': '*'
+    }, 
+    "other":
+    {
+        "Alias": "*",
+        "Criminals": '*',
+        'Crimes': '*',
+        'Sentences': '*',
+        'Prob_officers': '*',
+        'Crime_charges': "*", 
+        'Crime_officers': "*",
+        'Officers': '*', 
+        'Appeals': "*",
+        'Crime_codes': '*'
+    }
 }
 
 '''
@@ -66,10 +81,10 @@ def runstatement(statement, commit=False):
     cursor.close()
     return df
 
-def generateStatementViewer(table, action, query, attr="*"):
+def generateStatement(table, action, query, attr="*", permission="viewer"):
     if isinstance(attr, list):
         attr = ", ".join(attr)
-    if action.lower() != "select":
+    if permission == "viewer" and action.lower() != "select":
         return pd.DataFrame()
     sql = f"{action.upper()} {attr.upper()} FROM {table.upper()}"
     if query:
@@ -141,6 +156,7 @@ def registration():
 @app.route("/<username>/alias")
 def alias(username):
     runstatement('''use Criminal_Records''', commit=True)
+    
     alias_id = request.args.get('alias_id')
     alias = request.args.get('alias')
     query = None
@@ -154,8 +170,7 @@ def alias(username):
         displayMode = 'inline-block'
     else:
         query = None
-    
-    sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
+    sql = generateStatement('Alias', 'select', query, permissions[session["permission"]]['Alias'])
     df = runstatement(sql)
     return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode)
 
@@ -169,7 +184,7 @@ def appeals(username):
         displayMode = 'inline-block'
     else:
         query = None
-    sql = generateStatementViewer('Appeals', 'select', query, viewer['Appeals'])
+    sql = generateStatement('Appeals', 'select', query, permissions[session["permission"]]['Appeals'])
     df = runstatement(sql)
     return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -183,36 +198,38 @@ def crime_charges(username):
         displayMode = 'inline-block'
     else:
         query = None
-    sql = generateStatementViewer('Crime_charges', 'select', query, viewer['Crime_charges'])
+    sql = generateStatement('Crime_charges', 'select', query, permissions[session["permission"]]['Crime_charges'])
     df = runstatement(sql)
     return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/crime_codes")
 def crime_codes(username):
     runstatement('''use Criminal_Records''', commit=True)
-    crime_code = request.args.get('crime_code')
-    displayMode = 'none'
-    if crime_code:
-        query = f"Crime_code = '{crime_code}'"
-        displayMode = 'inline-block'
-    else:
-        query = None
-    sql = generateStatementViewer('Crime_codes', 'select', query, viewer['Crime_codes'])
-    df = runstatement(sql)
+    if session["permission"] == "viewer":
+        crime_code = request.args.get('crime_code')
+        displayMode = 'none'
+        if crime_code:
+            query = f"Crime_code = '{crime_code}'"
+            displayMode = 'inline-block'
+        else:
+            query = None
+        sql = generateStatement('Crime_codes', 'select', query, permissions[session["permission"]]['Crime_codes'])
+        df = runstatement(sql)
     return render_template("crime_codes.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/crime_officers")
 def crime_officers(username):
     runstatement('''use Criminal_Records''', commit=True)
-    crime_id = request.args.get('crime_id')
-    displayMode = 'none'
-    if crime_id:
-        query = f"Crime_ID = '{crime_id}'"
-        displayMode = 'inline-block'
-    else:
-        query = None
-    sql = generateStatementViewer('Crime_officers', 'select', query, viewer['Crime_officers'])
-    df = runstatement(sql)
+    if session["permission"] == "viewer":
+        crime_id = request.args.get('crime_id')
+        displayMode = 'none'
+        if crime_id:
+            query = f"Crime_ID = '{crime_id}'"
+            displayMode = 'inline-block'
+        else:
+            query = None
+        sql = generateStatement('Crime_officers', 'select', query, permissions[session["permission"]]['Crime_officers'])
+        df = runstatement(sql)
     return render_template("crime_officers.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/crimes")
@@ -225,7 +242,7 @@ def crimes(username):
         query = f"Crime_ID = '{crime_id}'"
     else:
         query = None
-    sql = generateStatementViewer('Crimes', 'select', query, viewer['Crimes'])
+    sql = generateStatement('Crimes', 'select', query, permissions[session["permission"]]['Crimes'])
     df = runstatement(sql)
     return render_template("crimes.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -247,7 +264,7 @@ def criminals(username):
     else:
         query = None
 
-    sql = generateStatementViewer('Criminals', 'select', query, viewer['Criminals'])
+    sql = generateStatement('Criminals', 'select', query, permissions[session["permission"]]['Criminals'])
     df = runstatement(sql)
     return render_template("criminals.html", data=df.to_html(classes="styled-table", index=False), show=show)
 
@@ -269,7 +286,7 @@ def prob_officers(username):
     else:
         query = None
 
-    sql = generateStatementViewer('Prob_officers', 'select', query, viewer['Prob_officers'])
+    sql = generateStatement('Prob_officers', 'select', query, permissions[session["permission"]]['Prob_officers'])
     df = runstatement(sql)
     return render_template("prob_officers.html", data=df.to_html(classes="styled-table", index=False), show=display)
 
@@ -296,7 +313,7 @@ def officers(username):
     else:
         query = None
 
-    sql = generateStatementViewer('Officers', 'select', query, viewer['Officers'])
+    sql = generateStatement('Officers', 'select', query, permissions[session["permission"]]['Officers'])
     df = runstatement(sql)
     return render_template("officers.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -311,7 +328,7 @@ def sentences(username):
         query = f"Sentence_ID = '{sentence_id}'"
     else:
         query = None
-    sql = generateStatementViewer('Sentences', 'select', query, viewer['Sentences'])
+    sql = generateStatement('Sentences', 'select', query, permissions[session["permission"]]['Sentences'])
     df = runstatement(sql)
     return render_template("sentences.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
