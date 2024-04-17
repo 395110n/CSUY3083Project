@@ -14,68 +14,71 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      .logout-button {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background-color: #f44336;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <!-- Sidebar navigation -->
     <div class="sidebar">
       <h2>City Jail Database</h2>
       <a href="{{ url_for('crimes', username=session['username']) }}">Crimes</a>
-      <a href="{{ url_for('criminals', username=session['username']) }}"
-        >Criminals</a
-      >
+      <a href="{{ url_for('criminals', username=session['username']) }}">Criminals</a>
       <a href="{{ url_for('alias', username=session['username']) }}">Alias</a>
-      <a href="{{ url_for('sentences', username=session['username']) }}"
-        >Sentences</a
-      >
-      <a
-        href="{{ url_for('prob_officers', username=session['username']) }}"
-        class="active"
-        >Probation Officers</a
-      >
-      <a href="{{ url_for('crime_charges', username=session['username']) }}"
-        >Crime Charges</a
-      >
-      <a href="{{ url_for('crime_officers', username=session['username']) }}"
-        >Crime Officers</a
-      >
-      <a href="{{ url_for('officers', username=session['username']) }}"
-        >Officers</a
-      >
-      <a href="{{ url_for('appeals', username=session['username']) }}"
-        >Appeals</a
-      >
-      <a href="{{ url_for('crime_codes', username=session['username']) }}"
-        >Crime Codes</a
-      >
-      <a href="{{ url_for('profile', username=session['username']) }}"
-        >Profile</a
-      >
+      <a href="{{ url_for('sentences', username=session['username']) }}">Sentences</a>
+      <a href="{{ url_for('prob_officers', username=session['username']) }}"  class="active" >Probation Officers</a>
+      <a href="{{ url_for('crime_charges', username=session['username']) }}">Crime Charges</a>
+      <a href="{{ url_for('crime_officers', username=session['username']) }}">Crime Officers</a>
+      <a href="{{ url_for('officers', username=session['username']) }}">Officers</a>
+      <a href="{{ url_for('appeals', username=session['username']) }}">Appeals</a>
+      <a href="{{ url_for('crime_codes', username=session['username']) }}">Crime Codes</a>
+      <a href="{{ url_for('profile', username=session['username']) }}">Profile</a>
     </div>
 
     <!-- Main content -->
     <div class="content">
       <h1>Probation Officers</h1>
       <div class="search-container">
+<<<<<<< HEAD
         <form style="display: inline-block;"
           action="{{ url_for('prob_officers', username=session['username']) }}"
           method="GET"
         >
           <input type="text" placeholder="Enter Prob ID" name="prob_id" />
+=======
+        <form action="">    <!-- action connects to flask??? -->
+          <input type="text" placeholder="Search.." name="search">
+>>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
           <button type="submit"><i class="fa fa-search"></i></button>
+          <button id="return-button" class="return-button"><i class="fas fa-arrow-left"></i></button>
         </form>
         <button type="button" id="clear" onclick="clearFilter()" style="display:{{show}};">Clear Filtre</button>
       </div>
       {{ data | safe }}
     </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+<<<<<<< HEAD
     <script>
       function clearFilter() {
         window.location.href = "{{ url_for('prob_officers', username=session['username']) }}";
       }
     </script>
+=======
+
+>>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
   </body>
 </html>

@@ -17,15 +17,21 @@ TODO:
 	(done)
 
 4. implement 'host' roles
+	based on permission, each page should leave a concole that could input sql commands and change tables
 
 	For each table should allow insert, modify users
 
 5. setup index page (or change login page to index page) (Done)
-6. login failure: 
+6. login failure: (Done)
 	1. probably want to add a pop-up that says login failure? 
+<<<<<<< HEAD
 	(Done)
 7. registration failure
 	(Done)
+=======
+7. registration failure (Done)
+
+>>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
 
 Testing: 
 create new databses with XAMPP, import Criminal_Records.sql and usrs.sql. 
