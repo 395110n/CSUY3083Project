@@ -16,13 +16,13 @@ mysql = MySQL(app)
 
 viewer = {
     "Alias": "*",
-    "Criminals": ["Criminal_ID", "FirstName", 'LastName', 'V_status', 'P_status'],
+    "Criminals": ["FirstName", 'LastName', 'V_status', 'P_status'],
     'Crimes': '*',
     'Sentences': '*',
-    'Prob_officers': ['Prob_ID', 'FirstName', 'LastName', 'Status'],
+    'Prob_officers': ['FirstName', 'LastName', 'Status'],
     'Crime_charges': "*", 
     'Crime_officers': "*",
-    'Officers': ['Officer_ID', 'FirstName', 'LastName', 'Precinct', 'Badge', 'Status'], 
+    'Officers': ['FirstName', 'LastName', 'Precinct', 'Badge', 'Status'], 
     'Appeals': "*",
     'Crime_codes': '*'
 }
@@ -157,7 +157,7 @@ def alias(username):
     
     sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
     df = runstatement(sql)
-    return render_template("alias.html", data=df.to_html(), displayMode=displayMode)
+    return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode)
 
 @app.route("/<username>/appeals")
 def appeals(username):
@@ -171,7 +171,7 @@ def appeals(username):
         query = None
     sql = generateStatementViewer('Appeals', 'select', query, viewer['Appeals'])
     df = runstatement(sql)
-    return render_template("appeals.html", data=df.to_html(),displayMode=displayMode)
+    return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/crime_charges")
 def crime_charges(username):
@@ -185,7 +185,7 @@ def crime_charges(username):
         query = None
     sql = generateStatementViewer('Crime_charges', 'select', query, viewer['Crime_charges'])
     df = runstatement(sql)
-    return render_template("crime_charges.html", data=df.to_html(),displayMode=displayMode)
+    return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/crime_codes")
 def crime_codes(username):
@@ -199,7 +199,7 @@ def crime_codes(username):
         query = None
     sql = generateStatementViewer('Crime_codes', 'select', query, viewer['Crime_codes'])
     df = runstatement(sql)
-    return render_template("crime_codes.html", data=df.to_html(),displayMode=displayMode)
+    return render_template("crime_codes.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/crime_officers")
 def crime_officers(username):
@@ -213,7 +213,7 @@ def crime_officers(username):
         query = None
     sql = generateStatementViewer('Crime_officers', 'select', query, viewer['Crime_officers'])
     df = runstatement(sql)
-    return render_template("crime_officers.html", data=df.to_html(),displayMode=displayMode)
+    return render_template("crime_officers.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/crimes")
 def crimes(username):
@@ -227,7 +227,7 @@ def crimes(username):
         query = None
     sql = generateStatementViewer('Crimes', 'select', query, viewer['Crimes'])
     df = runstatement(sql)
-    return render_template("crimes.html", data=df.to_html(),displayMode=displayMode)
+    return render_template("crimes.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/criminals")
 def criminals(username):
@@ -249,7 +249,7 @@ def criminals(username):
 
     sql = generateStatementViewer('Criminals', 'select', query, viewer['Criminals'])
     df = runstatement(sql)
-    return render_template("criminals.html", data=df.to_html(), show=show)
+    return render_template("criminals.html", data=df.to_html(classes="styled-table", index=False), show=show)
 
 @app.route("/<username>/prob_officers")
 def prob_officers(username):
@@ -271,7 +271,7 @@ def prob_officers(username):
 
     sql = generateStatementViewer('Prob_officers', 'select', query, viewer['Prob_officers'])
     df = runstatement(sql)
-    return render_template("prob_officers.html", data=df.to_html(), show=display)
+    return render_template("prob_officers.html", data=df.to_html(classes="styled-table", index=False), show=display)
 
 @app.route("/<username>/officers")
 def officers(username):
@@ -298,7 +298,7 @@ def officers(username):
 
     sql = generateStatementViewer('Officers', 'select', query, viewer['Officers'])
     df = runstatement(sql)
-    return render_template("officers.html", data=df.to_html(),displayMode=displayMode)
+    return render_template("officers.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 
 @app.route("/<username>/sentences")
@@ -313,7 +313,7 @@ def sentences(username):
         query = None
     sql = generateStatementViewer('Sentences', 'select', query, viewer['Sentences'])
     df = runstatement(sql)
-    return render_template("sentences.html", data=df.to_html(),displayMode=displayMode)
+    return render_template("sentences.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 
 if __name__ == "__main__":

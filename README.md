@@ -18,7 +18,7 @@ What's done:
 
 TODO:
 1. implement 'host' roles
-	1. based on permission, each page should leave a concole that could input sql commands and change tables
+	1. based on permission, each page should leave a concsole that could input sql commands and change tables
 	2. For each table should allow insert, modify users
 2. implement 'officer/employee' role?
 	1. these users can see the full table without any limitations
