@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_mysqldb import MySQL
 import pandas as pd
 
@@ -64,8 +64,10 @@ def generateStatementViewer(table, action, query, attr="*"):
         sql += f" WHERE {query}"
     return sql
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET','Post'])
 def login():
+    if request.method == 'GET':
+        return render_template("login.html")
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
     if request.method == 'POST':
@@ -78,8 +80,8 @@ def login():
                 session["firstName"] = df.iloc[0, 2]
                 session["lastName"] = df.iloc[0, 3]
                 session["permission"] = df.iloc[0, 4]
-
                 return redirect(url_for('profile', username=username))
+        flash("Login Failure")
     return render_template("login.html")
 
 @app.route("/<username>/profile")
@@ -92,6 +94,7 @@ def profile(username):
 @app.route('/logout')
 def logout():
     session.clear()
+    flash("You have been logged out!")
     # clear all the information stored in the session
     return redirect(url_for('login'))
 
@@ -99,7 +102,11 @@ def logout():
 def registration():
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
+    if request.method == 'GET':
+        # IT means it is from Login page
+        return render_template("registration.html")
     if request.method == 'POST':
+    # the request is sent by the registration form
         if 'submit' in request.form:
             df = runstatement(f'''call checkRegister('{request.form['uname']}')''')
             # if uname not unique, returns firstname, lastname
@@ -116,7 +123,7 @@ def registration():
             # else: 
             # TODO: should add a pop up for failing registration and 
             # show existing user's firstname, lastname
-
+    flash("Registration Failure")
     return render_template("registration.html")
 
 @app.route("/<username>/alias")

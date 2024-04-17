@@ -14,10 +14,12 @@
     />
   </head>
   <body>
+
     <div>
       <h1>User Registration</h1>
       <form
-        action="{{ url_for('registration') }}" method="post" autocomplete="off">
+        action="{{ url_for('registration') }}" method="POST" autocomplete="off">
+        <!-- after submit the form, it direct to registration method and use post  -->
         First name: <input type="text" id="fname" name="fname" required="" />
         <br />
         Last name: <input type="text" id="lname" name="lname" required="" />
@@ -28,6 +30,22 @@
         <br />
         <input type="submit" value="Submit" name="submit" class="btn" />
       </form>
+      <form action="{{url_for('login')}}">
+        <input type="submit" value="Back to Login" name="login" class="btn" />
+      </form>
+      
+    
+
+        {% with messages = get_flashed_messages() %}
+        <!-- jinja template, get flashed message -->
+          {% if messages %}
+          <!-- for pop out failure message -->
+              <script>
+                var message = "{{ messages[0]}}";
+                alert(message);
+              </script>
+          {% endif %}
+         {% endwith %}
     </div>
   </body>
 </html>
