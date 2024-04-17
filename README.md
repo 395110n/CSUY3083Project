@@ -13,7 +13,7 @@ TODO:
 1. implement register (Done)
 2. implement search (Done)
 
-	For search, need to create a replicate html file for each table and implement return button and show the satisfied rows.
+	Implement return button and show the satisfied rows.
 
 4. implement 'host' roles
 
