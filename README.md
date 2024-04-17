@@ -22,7 +22,9 @@ TODO:
 5. setup index page (or change login page to index page) (Done)
 6. login failure: 
 	1. probably want to add a pop-up that says login failure? 
+	(Done)
 7. registration failure
+	(Done)
 
 Testing: 
 create new databses with XAMPP, import Criminal_Records.sql and usrs.sql. 
