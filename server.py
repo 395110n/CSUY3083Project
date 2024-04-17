@@ -79,10 +79,10 @@ def runstatement(statement, commit=False):
     cursor.close()
     return df
 
-def generateStatement(table, action, query, attr="*", permission="viewer"):
+def generateStatementViewer(table, action, query, attr="*"):
     if isinstance(attr, list):
         attr = ", ".join(attr)
-    if permission == "viewer" and action.lower() != "select":
+    if action.lower() != "select":
         return pd.DataFrame()
     sql = f"{action.upper()} {attr.upper()} FROM {table.upper()}"
     if query:
@@ -387,4 +387,4 @@ def sentences(username):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="10.18.158.36",port="8080", debug=True)
