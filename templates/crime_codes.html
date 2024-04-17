@@ -61,16 +61,22 @@
     <div class="content">
       <h1>Crime Codes</h1>
       <div class="search-container">
-        <form
+        <form style="display: inline-block;"
           action="{{ url_for('crime_codes', username=session['username']) }}"
           method="GET"
         >
           <input type="text" placeholder="Enter Crime Code" name="crime_code" />
           <button type="submit"><i class="fa fa-search"></i></button>
         </form>
+        <button type="button" id="clear" onclick="clearFilter()" style="display:{{displayMode}};">Clear Filtre</button>
       </div>
       {{ data | safe }}
     </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+    <script>
+      function clearFilter() {
+        window.location.href = "{{ url_for('crime_codes', username=session['username']) }}";
+      }
+    </script>
   </body>
 </html>
