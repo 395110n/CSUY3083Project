@@ -113,9 +113,7 @@ def registration():
                             ('{session["username"]}', '{session["password"]}', 
                             '{session["firstName"]}', '{session["lastName"]}')""", commit=True)
                 return redirect(url_for('login', username=session["username"]))
-            # else: 
-            # TODO: should add a pop up for failing registration and 
-            # show existing user's firstname, lastname
+            
 
     return render_template("registration.html")
 
@@ -207,10 +205,9 @@ def criminals(username):
 def prob_officers(username):
     runstatement('''use Criminal_Records''', commit=True)
     prob_id = request.args.get('prob_id')
-    if 'return_button' in request.form:
-        df = runstatement(generateStatementViewer('Prob_officers', 'select', query, viewer['Prob_officers']))
-        return render_template("prob_officers.html", data=df.to_html())
+    print(prob_id)
     if prob_id:
+        
         query = f"Prob_ID = '{prob_id}'"
     else:
         query = None
