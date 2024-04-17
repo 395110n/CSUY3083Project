@@ -23,3 +23,7 @@ TODO:
 6. login failure: 
 	1. probably want to add a pop-up that says login failure? 
 7. registration failure
+
+Testing: 
+create new databses with XAMPP, import Criminal_Records.sql and usrs.sql. 
+after that, input all the commands
