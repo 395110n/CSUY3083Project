@@ -92,6 +92,7 @@ def profile(username):
 @app.route('/logout')
 def logout():
     session.clear()
+    # clear all the information stored in the session
     return redirect(url_for('login'))
 
 @app.route("/registration", methods=['GET', 'POST'])

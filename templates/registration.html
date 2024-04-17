@@ -12,103 +12,12 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='/css/registration.css') }}"
     />
-    <script>
-      function lti_launch(vars, target) {
-        var query = "";
-        var new_tab = false;
-
-        for (var key in vars) {
-          if (query.length == 0) {
-            query += "?" + key + "=" + encodeURIComponent(vars[key]);
-          } else {
-            query += "&" + key + "=" + encodeURIComponent(vars[key]);
-          }
-        }
-
-        var url = "/d2l/customization/pearsonlti/6606/Launch" + query;
-        target == "_blank" ? window.open(url, "_blank") : location.replace(url);
-      }
-    </script>
-    <script
-      src="./User Registration_files/mathjax.js.download"
-      type="module"
-    ></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        if (
-          document.querySelector("math") ||
-          /\$\$|\\\(|\\\[|\\begin{|\\ref{|\\eqref{/.test(
-            document.body.innerHTML
-          )
-        ) {
-          document
-            .querySelectorAll('mspace[linebreak="newline"]')
-            .forEach((elm) => {
-              elm.setAttribute("style", "display: block; height: 0.5rem;");
-            });
-
-          window.D2L.MathJax.loadMathJax({
-            outputScale: 1.5,
-            renderLatex: true,
-          });
-        }
-      });
-    </script>
-    <script
-      src="./User Registration_files/prism.js.download"
-      type="module"
-    ></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".d2l-code").forEach((code) => {
-          window.D2L.Prism.formatCodeElement(code);
-        });
-      });
-    </script>
-    <script>
-      window.addEventListener("message", function (event) {
-        if (!event.data) {
-          return;
-        }
-
-        var params;
-        try {
-          params = JSON.parse(event.data);
-        } catch {
-          return;
-        }
-        if (!params.subject || params.subject !== "lti.frameResize") {
-          return;
-        }
-
-        const MAX_FRAME_HEIGHT = 10000;
-        if (
-          !params.height ||
-          params.height < 1 ||
-          params.height > MAX_FRAME_HEIGHT
-        ) {
-          console.warn("Invalid height value received, aborting");
-          return;
-        }
-        var el = document.getElementsByTagName("iframe");
-        for (var i = 0; i < el.length; i++) {
-          if (el[i].contentWindow === event.source) {
-            el[i].style.height = params.height + "px";
-            el[i].style.width = "100%";
-            console.info("Setting iFrame height to " + params.height);
-            console.info("Setting iFrame width to 100%");
-          }
-        }
-      });
-    </script>
   </head>
   <body>
     <div>
       <h1>User Registration</h1>
       <form
-        action="{{ url_for('registration') }}"
-        method="post"
-      >
+        action="{{ url_for('registration') }}" method="post" autocomplete="off">
         First name: <input type="text" id="fname" name="fname" required="" />
         <br />
         Last name: <input type="text" id="lname" name="lname" required="" />
@@ -120,11 +29,5 @@
         <input type="submit" value="Submit" name="submit" class="btn" />
       </form>
     </div>
-
-    <script
-      src="./User Registration_files/bootstrap.bundle.min.js.download"
-      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>

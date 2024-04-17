@@ -1,1 +1,2 @@
-login
+
+app = Flask(__name__)
