@@ -213,15 +213,16 @@ def crimes(username):
 @app.route("/<username>/criminals")
 def criminals(username):
     runstatement('''use Criminal_Records''', commit=True)
-    displayMode = 'none'
+    show = 'none'
     criminal_id = request.args.get('criminal_id')
     if criminal_id:
+        show = 'inline-block'
         query = f"Criminal_ID = '{criminal_id}'"
     else:
         query = None
     sql = generateStatementViewer('Criminals', 'select', query, viewer['Criminals'])
     df = runstatement(sql)
-    return render_template("criminals.html", data=df.to_html(),dsiplayMode=displayMode)
+    return render_template("criminals.html", data=df.to_html(),show=show)
 
 @app.route("/<username>/prob_officers")
 def prob_officers(username):
