@@ -59,21 +59,39 @@
     </div>
 
     <!-- Main content -->
-    <div class="content" >
+    <div class="content">
       <h1>Alias</h1>
       <div class="search-container">
-        <form name ="filter"  style="display: inline-block;"
+        <form
+          name="filter"
+          style="display: inline-block"
           action="{{ url_for('alias', username=session['username']) }}"
           method="GET"
         >
           <input type="text" placeholder="Enter Alias ID" name="alias_id" />
-          <button type="submit" onclick="showClear()"><i class="fa fa-search"></i></button>
+          <button type="submit" onclick="showClear()">
+            <i class="fa fa-search"></i>
+          </button>
         </form>
-        <form name="filterName" style="display: inline-block;" action="{{ url_for('alias', username=session['username']) }}" method="GET">
+        <br />
+        <form
+          name="filterName"
+          style="display: inline-block"
+          action="{{ url_for('alias', username=session['username']) }}"
+          method="GET"
+        >
           <input type="text" placeholder="Enter Alias Name" name="alias" />
           <button type="submit"><i class="fa fa-search"></i></button>
-        </form>        
-        <button type="button" id="clear" onclick="clearFilter()" style="display:{{displayMode}};">Clear Filter</button>
+        </form>
+        <br />
+        <button
+          type="button"
+          id="clear"
+          onclick="clearFilter()"
+          style="display:{{displayMode}};"
+        >
+          Clear Filter
+        </button>
         <!-- use flask mode to pass the value to it to control the display or not -->
       </div>
 
@@ -82,9 +100,9 @@
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
     <script>
       function clearFilter() {
-        window.location.href = "{{ url_for('alias', username=session['username']) }}";
+        window.location.href =
+          "{{ url_for('alias', username=session['username']) }}";
       }
     </script>
   </body>
-
 </html>

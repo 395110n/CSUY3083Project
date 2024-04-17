@@ -60,7 +60,8 @@
     <div class="content">
       <h1>Criminals</h1>
       <div class="search-container">
-        <form style="display: inline-block;"
+        <form
+          style="display: inline-block"
           action="{{ url_for('criminals', username=session['username']) }}"
           method="GET"
         >
@@ -71,14 +72,33 @@
           />
           <button type="submit"><i class="fa fa-search"></i></button>
         </form>
-        <button type="button" id="clear" onclick="clearFilter()" style="display:{{show}};">Clear Filter</button>
+        <br />
+        <form
+          style="display: inline-block"
+          action="{{ url_for('criminals', username=session['username']) }}"
+          method="GET"
+        >
+          <input type="text" placeholder="Enter First Name" name="FirstName" />
+          <input type="text" placeholder="Enter Last Name" name="LastName" />
+          <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        <br />
+        <button
+          type="button"
+          id="clear"
+          onclick="clearFilter()"
+          style="display:{{show}};"
+        >
+          Clear Filter
+        </button>
       </div>
       {{ data | safe }}
     </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
     <script>
       function clearFilter() {
-        window.location.href = "{{ url_for('criminals', username=session['username']) }}";
+        window.location.href =
+          "{{ url_for('criminals', username=session['username']) }}";
       }
     </script>
   </body>

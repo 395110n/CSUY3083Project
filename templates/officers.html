@@ -57,24 +57,58 @@
     </div>
 
     <!-- Main content -->
+    <!-- Main content -->
     <div class="content">
       <h1>Officers</h1>
       <div class="search-container">
-        <form style="display: inline-block;"
+        <!-- Form for searching by officer ID -->
+        <form
+          style="display: inline-block"
           action="{{ url_for('officers', username=session['username']) }}"
           method="GET"
         >
           <input type="text" placeholder="Enter Officer ID" name="officer_id" />
           <button type="submit"><i class="fa fa-search"></i></button>
         </form>
-        <button type="button" id="clear" onclick="clearFilter()" style="display:{{displayMode}};">Clear Filter</button>
+        <br />
+        <!-- Form for searching by full name -->
+        <form
+          style="display: inline-block"
+          action="{{ url_for('officers', username=session['username']) }}"
+          method="GET"
+        >
+          <input type="text" placeholder="Enter First Name" name="FirstName" />
+          <input type="text" placeholder="Enter Last Name" name="LastName" />
+          <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        <br />
+        <!-- Form for searching by badge -->
+        <form
+          style="display: inline-block"
+          action="{{ url_for('officers', username=session['username']) }}"
+          method="GET"
+        >
+          <input type="text" placeholder="Enter Badge" name="Badage" />
+          <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        <br />
+        <button
+          type="button"
+          id="clear"
+          onclick="clearFilter()"
+          style="display:{{displayMode}};"
+        >
+          Clear Filter
+        </button>
       </div>
       {{ data | safe }}
     </div>
+
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
     <script>
       function clearFilter() {
-        window.location.href = "{{ url_for('officers', username=session['username']) }}";
+        window.location.href =
+          "{{ url_for('officers', username=session['username']) }}";
       }
     </script>
   </body>

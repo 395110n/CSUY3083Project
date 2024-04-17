@@ -68,6 +68,18 @@
           <input type="text" placeholder="Enter Prob ID" name="prob_id" />
           <button type="submit"><i class="fa fa-search"></i></button>
         </form>
+        <br />
+        <form
+          style="display: inline-block"
+          action="{{ url_for('prob_officers', username=session['username']) }}"
+          method="GET"
+        >
+          <input type="text" placeholder="Enter First Name" name="FirstName" />
+          <input type="text" placeholder="Enter Last Name" name="LastName" />
+          <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        <br />
+
         <button
           type="button"
           id="clear"

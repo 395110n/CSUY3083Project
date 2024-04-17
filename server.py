@@ -128,17 +128,20 @@ def alias(username):
     alias_id = request.args.get('alias_id')
     alias = request.args.get('alias')
     query = None
-    
+    displayMode = 'none'  # Initialize displayMode variable
+
     if alias_id:
         query = f"Alias_ID = '{alias_id}'"
+        displayMode = 'inline-block'
     elif alias:
-        query = f"Alias = '{alias}'"  # Modify this according to your database column name
+        query = f"Alias = '{alias}'" 
+        displayMode = 'inline-block'
     else:
         query = None
     
     sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
     df = runstatement(sql)
-    return render_template("alias.html", data=df.to_html())
+    return render_template("alias.html", data=df.to_html(), displayMode=displayMode)
 
 @app.route("/<username>/appeals")
 def appeals(username):
@@ -215,42 +218,72 @@ def criminals(username):
     runstatement('''use Criminal_Records''', commit=True)
     show = 'none'
     criminal_id = request.args.get('criminal_id')
+    fname = request.args.get('FirstName')
+    lname = request.args.get('LastName')
+    query = None
+
     if criminal_id:
         show = 'inline-block'
         query = f"Criminal_ID = '{criminal_id}'"
+    elif fname and lname:
+        show = 'inline-block'
+        query = f"FirstName = '{fname}' AND LastName = '{lname}'"
     else:
         query = None
+
     sql = generateStatementViewer('Criminals', 'select', query, viewer['Criminals'])
     df = runstatement(sql)
-    return render_template("criminals.html", data=df.to_html(),show=show)
+    return render_template("criminals.html", data=df.to_html(), show=show)
 
 @app.route("/<username>/prob_officers")
 def prob_officers(username):
     runstatement('''use Criminal_Records''', commit=True)
     prob_id = request.args.get('prob_id')
+    fname = request.args.get('FirstName')
+    lname = request.args.get('LastName')
     display = 'none'
+    query = None
+
     if prob_id:
         display = 'inline-block'
         query = f"Prob_ID = '{prob_id}'"
+    elif fname and lname:
+        display = 'inline-block'
+        query = f"FirstName = '{fname}' AND LastName = '{lname}'"
     else:
         query = None
+
     sql = generateStatementViewer('Prob_officers', 'select', query, viewer['Prob_officers'])
     df = runstatement(sql)
-    return render_template("prob_officers.html", data=df.to_html(),show=display)
+    return render_template("prob_officers.html", data=df.to_html(), show=display)
 
 @app.route("/<username>/officers")
 def officers(username):
     runstatement('''use Criminal_Records''', commit=True)
     displayMode = 'none'
     officer_id = request.args.get('officer_id')
+    fname = request.args.get('FirstName')
+    lname = request.args.get('LastName')
+    badge = request.args.get('Badage')
+    
+    query = None
+
     if officer_id:
         displayMode = 'inline-block'
         query = f"Officer_ID = '{officer_id}'"
+    elif fname and lname:
+        displayMode = 'inline-block'
+        query = f"FirstName = '{fname}' AND LastName = '{lname}'"
+    elif badge:
+        displayMode = 'inline-block'
+        query = f"Badge = '{badge}'"
     else:
         query = None
+
     sql = generateStatementViewer('Officers', 'select', query, viewer['Officers'])
     df = runstatement(sql)
     return render_template("officers.html", data=df.to_html(),displayMode=displayMode)
+
 
 @app.route("/<username>/sentences")
 def sentences(username):
