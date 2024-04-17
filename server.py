@@ -66,6 +66,7 @@ def generateStatementViewer(table, action, query, attr="*"):
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    error_message = None
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
     if request.method == 'POST':
@@ -80,7 +81,9 @@ def login():
                 session["permission"] = df.iloc[0, 4]
 
                 return redirect(url_for('profile', username=username))
-    return render_template("login.html")
+            else:
+                error_message = "Invalid username or password. Please try again."
+    return render_template("login.html", error_message=error_message)
 
 @app.route("/<username>/profile")
 def profile(username):
@@ -97,6 +100,7 @@ def logout():
 
 @app.route("/registration", methods=['GET', 'POST'])
 def registration():
+    error_message = None  # Initialize error message variable
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
     if request.method == 'POST':
@@ -113,9 +117,9 @@ def registration():
                             ('{session["username"]}', '{session["password"]}', 
                             '{session["firstName"]}', '{session["lastName"]}')""", commit=True)
                 return redirect(url_for('login', username=session["username"]))
-            
-
-    return render_template("registration.html")
+            else:
+                error_message = f"Username '{request.form['uname']}' already exists. Please choose a different username."  # Set error message
+    return render_template("registration.html", error_message=error_message)
 
 @app.route("/<username>/alias")
 def alias(username):
