@@ -64,10 +64,9 @@ def generateStatementViewer(table, action, query, attr="*"):
         sql += f" WHERE {query}"
     return sql
 
-@app.route('/', methods=['GET','Post'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
-    if request.method == 'GET':
-        return render_template("login.html")
+    error_message = None
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
     if request.method == 'POST':
@@ -80,9 +79,11 @@ def login():
                 session["firstName"] = df.iloc[0, 2]
                 session["lastName"] = df.iloc[0, 3]
                 session["permission"] = df.iloc[0, 4]
+
                 return redirect(url_for('profile', username=username))
-        flash("Login Failure")
-    return render_template("login.html")
+            else:
+                error_message = "Invalid username or password. Please try again."
+    return render_template("login.html", error_message=error_message)
 
 @app.route("/<username>/profile")
 def profile(username):
@@ -100,13 +101,10 @@ def logout():
 
 @app.route("/registration", methods=['GET', 'POST'])
 def registration():
+    error_message = None  # Initialize error message variable
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
-    if request.method == 'GET':
-        # IT means it is from Login page
-        return render_template("registration.html")
     if request.method == 'POST':
-    # the request is sent by the registration form
         if 'submit' in request.form:
             df = runstatement(f'''call checkRegister('{request.form['uname']}')''')
             # if uname not unique, returns firstname, lastname
@@ -120,25 +118,27 @@ def registration():
                             ('{session["username"]}', '{session["password"]}', 
                             '{session["firstName"]}', '{session["lastName"]}')""", commit=True)
                 return redirect(url_for('login', username=session["username"]))
-            # else: 
-            # TODO: should add a pop up for failing registration and 
-            # show existing user's firstname, lastname
-    flash("Registration Failure")
-    return render_template("registration.html")
+            else:
+                error_message = f"Username '{request.form['uname']}' already exists. Please choose a different username."  # Set error message
+    return render_template("registration.html", error_message=error_message)
 
 @app.route("/<username>/alias")
 def alias(username):
     runstatement('''use Criminal_Records''', commit=True)
-    displayMode = 'none'
     alias_id = request.args.get('alias_id')
+    alias = request.args.get('alias')
+    query = None
+    
     if alias_id:
         query = f"Alias_ID = '{alias_id}'"
-        displayMode = 'inline-bloack'
+    elif alias:
+        query = f"Alias = '{alias}'"  # Modify this according to your database column name
     else:
         query = None
+    
     sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
     df = runstatement(sql)
-    return render_template("alias.html", data=df.to_html(),displayMode=displayMode)
+    return render_template("alias.html", data=df.to_html())
 
 @app.route("/<username>/appeals")
 def appeals(username):

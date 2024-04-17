@@ -14,7 +14,6 @@
     />
   </head>
   <body>
-
     <div>
       <h1>User Registration</h1>
       <form
@@ -34,28 +33,13 @@
         {% if error_message %}
         <p style="color: red">{{ error_message }}</p>
         {% endif %}
-        <!-- Failure to register -->
-        {% if error_message %}
-        <p style="color: red">{{ error_message }}</p>
-        {% endif %}
         <input type="submit" value="Submit" name="submit" class="btn" />
       </form>
-      <form action="{{url_for('login')}}">
-        <input type="submit" value="Back to Login" name="login" class="btn" />
+    </div>
+    <div>
+      <form action="/" method="get">
+        <input type="submit" value="Back to Login" class="btn" />
       </form>
-      
-    
-
-        {% with messages = get_flashed_messages() %}
-        <!-- jinja template, get flashed message -->
-          {% if messages %}
-          <!-- for pop out failure message -->
-              <script>
-                var message = "{{ messages[0]}}";
-                alert(message);
-              </script>
-          {% endif %}
-         {% endwith %}
     </div>
   </body>
 </html>

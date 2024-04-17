@@ -69,6 +69,10 @@
           <input type="text" placeholder="Enter Alias ID" name="alias_id" />
           <button type="submit" onclick="showClear()"><i class="fa fa-search"></i></button>
         </form>
+        <form name="filterName" style="display: inline-block;" action="{{ url_for('alias', username=session['username']) }}" method="GET">
+          <input type="text" placeholder="Enter Alias Name" name="alias" />
+          <button type="submit"><i class="fa fa-search"></i></button>
+        </form>        
         <button type="button" id="clear" onclick="clearFilter()" style="display:{{displayMode}};">Clear Filter</button>
         <!-- use flask mode to pass the value to it to control the display or not -->
       </div>

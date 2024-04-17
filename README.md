@@ -17,23 +17,10 @@ What's done:
 9. registration failure (Done)
 
 TODO:
-1. implement register (Done)
-2. implement search (Done)
-
-	Implement return button and show the satisfied rows.
-	(done)
-
-4. implement 'host' roles
+1. implement 'host' roles
 	based on permission, each page should leave a concole that could input sql commands and change tables
 
 	For each table should allow insert, modify users
-
-5. setup index page (or change login page to index page) (Done)
-6. login failure: (Done)
-	1. probably want to add a pop-up that says login failure? 
-	(Done)
-
-7. registration failure (Done)
 
 Testing: 
 create new databses with XAMPP, import Criminal_Records.sql and usrs.sql. 
