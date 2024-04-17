@@ -25,6 +25,10 @@
         {% if error_message %}
         <p style="color: red">{{ error_message }}</p>
         {% endif %}
+        <!-- Logout message -->
+        {% if logout_message %}
+        <p style="color: green">{{ logout_message }}</p>
+        {% endif %}
         <input type="submit" value="Login" name="login" class="btn" />
       </form>
     </div>

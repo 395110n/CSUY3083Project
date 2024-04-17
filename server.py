@@ -67,6 +67,7 @@ def generateStatementViewer(table, action, query, attr="*"):
 @app.route('/', methods=['GET', 'POST'])
 def login():
     error_message = None
+    logout_message = None
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
     if request.method == 'POST':
@@ -83,7 +84,11 @@ def login():
                 return redirect(url_for('profile', username=username))
             else:
                 error_message = "Invalid username or password. Please try again."
-    return render_template("login.html", error_message=error_message)
+    # Check if logout message exists in the session
+    if 'logout_message' in session:
+        logout_message = session.pop('logout_message')
+    
+    return render_template("login.html", error_message=error_message, logout_message=logout_message)
 
 @app.route("/<username>/profile")
 def profile(username):
@@ -95,8 +100,7 @@ def profile(username):
 @app.route('/logout')
 def logout():
     session.clear()
-    flash("You have been logged out!")
-    # clear all the information stored in the session
+    session['logout_message'] = "You have been logged out successfully!"
     return redirect(url_for('login'))
 
 @app.route("/registration", methods=['GET', 'POST'])
