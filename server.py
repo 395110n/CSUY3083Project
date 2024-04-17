@@ -66,12 +66,8 @@ def generateStatementViewer(table, action, query, attr="*"):
 
 @app.route('/', methods=['GET','Post'])
 def login():
-<<<<<<< HEAD
     if request.method == 'GET':
         return render_template("login.html")
-=======
-    error_message = None
->>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
     if request.method == 'POST':
@@ -85,14 +81,8 @@ def login():
                 session["lastName"] = df.iloc[0, 3]
                 session["permission"] = df.iloc[0, 4]
                 return redirect(url_for('profile', username=username))
-<<<<<<< HEAD
         flash("Login Failure")
     return render_template("login.html")
-=======
-            else:
-                error_message = "Invalid username or password. Please try again."
-    return render_template("login.html", error_message=error_message)
->>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
 
 @app.route("/<username>/profile")
 def profile(username):
@@ -110,7 +100,6 @@ def logout():
 
 @app.route("/registration", methods=['GET', 'POST'])
 def registration():
-    error_message = None  # Initialize error message variable
     if 'username' in session:
         return redirect(url_for('profile', username=session['username']))
     if request.method == 'GET':
@@ -131,17 +120,11 @@ def registration():
                             ('{session["username"]}', '{session["password"]}', 
                             '{session["firstName"]}', '{session["lastName"]}')""", commit=True)
                 return redirect(url_for('login', username=session["username"]))
-<<<<<<< HEAD
             # else: 
             # TODO: should add a pop up for failing registration and 
             # show existing user's firstname, lastname
     flash("Registration Failure")
     return render_template("registration.html")
-=======
-            else:
-                error_message = f"Username '{request.form['uname']}' already exists. Please choose a different username."  # Set error message
-    return render_template("registration.html", error_message=error_message)
->>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
 
 @app.route("/<username>/alias")
 def alias(username):
@@ -244,13 +227,7 @@ def criminals(username):
 def prob_officers(username):
     runstatement('''use Criminal_Records''', commit=True)
     prob_id = request.args.get('prob_id')
-<<<<<<< HEAD
     display = 'none'
-=======
-    if 'return_button' in request.form:
-        df = runstatement(generateStatementViewer('Prob_officers', 'select', query, viewer['Prob_officers']))
-        return render_template("prob_officers.html", data=df.to_html())
->>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
     if prob_id:
         display = 'inline-block'
         query = f"Prob_ID = '{prob_id}'"

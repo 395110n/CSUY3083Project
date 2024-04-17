@@ -25,9 +25,14 @@ TODO:
 6. login failure: (Done)
 	1. probably want to add a pop-up that says login failure? 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	(Done)
 7. registration failure
 	(Done)
+=======
+7. registration failure (Done)
+
+>>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
 =======
 7. registration failure (Done)
 

@@ -39,6 +39,10 @@
         {% if error_message %}
         <p style="color: red">{{ error_message }}</p>
         {% endif %}
+        <!-- Failure to register -->
+        {% if error_message %}
+        <p style="color: red">{{ error_message }}</p>
+        {% endif %}
         <input type="submit" value="Submit" name="submit" class="btn" />
       </form>
       <form action="{{url_for('login')}}">
@@ -57,6 +61,11 @@
               </script>
           {% endif %}
          {% endwith %}
+    </div>
+    <div>
+      <form action="/" method="get">
+        <input type="submit" value="Back" class="btn" />
+      </form>
     </div>
     <div>
       <form action="/" method="get">

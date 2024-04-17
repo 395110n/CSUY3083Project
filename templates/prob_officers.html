@@ -54,11 +54,16 @@
       <h1>Probation Officers</h1>
       <div class="search-container">
 <<<<<<< HEAD
+<<<<<<< HEAD
         <form style="display: inline-block;"
           action="{{ url_for('prob_officers', username=session['username']) }}"
           method="GET"
         >
           <input type="text" placeholder="Enter Prob ID" name="prob_id" />
+=======
+        <form action="">    <!-- action connects to flask??? -->
+          <input type="text" placeholder="Search.." name="search">
+>>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
 =======
         <form action="">    <!-- action connects to flask??? -->
           <input type="text" placeholder="Search.." name="search">
@@ -72,11 +77,15 @@
     </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <script>
       function clearFilter() {
         window.location.href = "{{ url_for('prob_officers', username=session['username']) }}";
       }
     </script>
+=======
+
+>>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
 =======
 
 >>>>>>> 7c5bc350f3930e82bf99aa6d29f90fd3b7ee0262
