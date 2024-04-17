@@ -95,7 +95,11 @@
         <!-- use flask mode to pass the value to it to control the display or not -->
       </div>
 
-      {{ data | safe }}
+      <div class="scrollable-table">
+        {{ data | safe }}
+        <!-- Render the table data here -->
+      </div>
+      
     </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
     <script>

@@ -69,9 +69,10 @@
           <button type="submit"><i class="fa fa-search"></i></button>
         </form>
         <button type="button" id="clear" onclick="clearFilter()" style="display:{{displayMode}};">Clear Filter</button>
-      </div>
-      {{ data | safe }}
-    </div>
+        <div class="scrollable-table">
+          {{ data | safe }}
+          <!-- Render the table data here -->
+        </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
     <script>
       function clearFilter() {

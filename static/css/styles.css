@@ -123,3 +123,8 @@ body {
 .styled-table tbody tr:last-of-type {
   border-bottom: 2px solid #009879;
 }
+
+.scrollable-table {
+  max-height: 300px; /* Set the maximum height for the table */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
