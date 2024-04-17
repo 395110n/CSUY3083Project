@@ -16,6 +16,7 @@ TODO:
 	Implement return button and show the satisfied rows.
 
 4. implement 'host' roles
+	based on permission, each page should leave a concole that could input sql commands and change tables
 
 	For each table should allow insert, modify users
 
@@ -23,6 +24,7 @@ TODO:
 6. login failure: 
 	1. probably want to add a pop-up that says login failure? 
 7. registration failure
+
 
 Testing: 
 create new databses with XAMPP, import Criminal_Records.sql and usrs.sql. 

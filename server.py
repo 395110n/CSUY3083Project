@@ -207,6 +207,9 @@ def criminals(username):
 def prob_officers(username):
     runstatement('''use Criminal_Records''', commit=True)
     prob_id = request.args.get('prob_id')
+    if 'return_button' in request.form:
+        df = runstatement(generateStatementViewer('Prob_officers', 'select', query, viewer['Prob_officers']))
+        return render_template("prob_officers.html", data=df.to_html())
     if prob_id:
         query = f"Prob_ID = '{prob_id}'"
     else:
