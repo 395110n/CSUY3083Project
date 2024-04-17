@@ -15,14 +15,14 @@ What's done:
 8. login failure: (Done)
 	1. probably want to add a pop-up that says login failure? 
 9. registration failure (Done)
+10. implement 'officer/employee' role (Done)
+	1. these users can see the full table without any limitations
+	2. however, they dont have the add/delete/update buttons/options
 
 TODO:
 1. implement 'host' roles
 	1. based on permission, each page should leave a concsole that could input sql commands and change tables
 	2. For each table should allow insert, modify users
-2. implement 'officer/employee' role?
-	1. these users can see the full table without any limitations
-	2. however, they dont have the add/delete/update buttons/options
 
 Testing: 
 create new databses with XAMPP, import Criminal_Records.sql and usrs.sql. 
