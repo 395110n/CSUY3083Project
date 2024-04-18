@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for, flash
+from flask import Flask, make_response, render_template, request, session, redirect, url_for, flash
 from flask_mysqldb import MySQL
 import pandas as pd
 
@@ -138,26 +138,42 @@ def registration():
                 error_message = f"Username '{request.form['uname']}' already exists. Please choose a different username."  # Set error message
     return render_template("registration.html", error_message=error_message)
 
-@app.route("/<username>/alias")
+@app.route("/<username>/alias",methods=['GET', 'POST'])
 def alias(username):
     runstatement('''use Criminal_Records''', commit=True)
-    alias_id = request.args.get('alias_id')
-    alias = request.args.get('alias')
-    query = None
-    displayMode = 'none'  # Initialize displayMode variable
-
-    if alias_id:
-        query = f"Alias_ID = '{alias_id}'"
-        displayMode = 'inline-block'
-    elif alias:
-        query = f"Alias = '{alias}'" 
-        displayMode = 'inline-block'
+    if request.method == 'POST' and session.get("permission") == 'host':
+        alias_id = request.form.getlist('alias_id[]')
+        alias = request.form.getlist('alias[]')
+        criminal_id = request.form.getlist('criminal_id[]')
+        sql = f'''INSERT INTO Alias (Alias_ID, Alias, Criminal_ID) VALUES '''
+        for ind in range(len(alias_id)):
+            if ind == len(alias_id) - 1:
+                sql += f"({alias_id[ind]}, '{alias[ind]}', {criminal_id[ind]});"
+            else:
+                sql += f"({alias_id[ind]}, '{alias[ind]}', {criminal_id[ind]}),"
+        try:
+            print(sql)
+            runstatement(sql, commit=True)
+            return (runstatement("select * from Alias").to_html(classes="styled-table", index=False))
+        except:
+            return make_response("Error: Alias ID already exists or required data is missing.", 400)
     else:
+        alias_id = request.args.get('alias_id')
+        alias = request.args.get('alias')
         query = None
-    
-    sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
-    df = runstatement(sql)
-    return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode)
+        displayMode = 'none'  # Initialize displayMode variable
+        if alias_id:
+            query = f"Alias_ID = '{alias_id}'"
+            displayMode = 'inline-block'
+        elif alias:
+            query = f"Alias = '{alias}'" 
+            displayMode = 'inline-block'
+        else:
+            query = None
+        sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/appeals")
 def appeals(username):
