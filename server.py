@@ -238,7 +238,7 @@ def appeals(username):
 
     if session["permission"] == "viewer":
         table = viewer['Appeals']
-    elif session["permission"] == "employee":
+    elif session["permission"] == "employee" or "host":
         table = employee['Appeals']
         
     sql = generateStatementViewer('Appeals', 'select', query, table)
@@ -258,7 +258,7 @@ def crime_charges(username):
 
     if session["permission"] == "viewer":
         table = viewer['Crime_charges']
-    elif session["permission"] == "employee":
+    elif session["permission"] == "employee" or "host":
         table = employee['Crime_charges']
 
     sql = generateStatementViewer('Crime_charges', 'select', query, table)
@@ -278,7 +278,7 @@ def crime_codes(username):
 
     if session["permission"] == "viewer":
         table = viewer['Crime_codes']
-    elif session["permission"] == "employee":
+    elif session["permission"] == "employee" or "host":
         table = employee['Crime_codes']
         
     sql = generateStatementViewer('Crime_codes', 'select', query, table)
@@ -298,8 +298,9 @@ def crime_officers(username):
 
     if session["permission"] == "viewer":
         table = viewer['Crime_officers']
-    elif session["permission"] == "employee":
+    elif session["permission"] == "employee" or "host":
         table = employee['Crime_officers']
+
 
     sql = generateStatementViewer('Crime_officers', 'select', query, table)
     df = runstatement(sql)
@@ -318,7 +319,7 @@ def crimes(username):
 
     if session["permission"] == "viewer":
         table = viewer['Crimes']
-    elif session["permission"] == "employee":
+    elif session["permission"] == "employee" or "host":
         table = employee['Crimes']
 
     sql = generateStatementViewer('Crimes', 'select', query, table)
@@ -345,7 +346,7 @@ def criminals(username):
 
     if session["permission"] == "viewer":
         table = viewer['Criminals']
-    elif session["permission"] == "employee":
+    elif session["permission"] == "employee" or "host":
         table = employee['Criminals']
 
     sql = generateStatementViewer('Criminals', 'select', query, table)
@@ -372,7 +373,7 @@ def prob_officers(username):
 
     if session["permission"] == "viewer":
         table = viewer['Prob_officers']
-    elif session["permission"] == "employee":
+    elif session["permission"] == "employee" or "host":
         table = employee['Prob_officers']
 
     sql = generateStatementViewer('Prob_officers', 'select', query, table)
@@ -404,7 +405,7 @@ def officers(username):
 
     if session["permission"] == "viewer":
         table = viewer['Officers']
-    elif session["permission"] == "employee":
+    elif session["permission"] == "employee" or "host":
         table = employee['Officers']
 
     sql = generateStatementViewer('Officers', 'select', query, table)
@@ -425,7 +426,7 @@ def sentences(username):
 
     if session["permission"] == "viewer":
         table = viewer['Sentences']
-    elif session["permission"] == "employee":
+    elif session["permission"] == "employee" or "host":
         table = employee['Sentences']
 
     sql = generateStatementViewer('Sentences', 'select', query, table)
