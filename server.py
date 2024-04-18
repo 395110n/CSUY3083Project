@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for, flash
+from flask import Flask, make_response, render_template, request, session, redirect, url_for, flash
 from flask_mysqldb import MySQL
 import pandas as pd
 
@@ -25,19 +25,6 @@ viewer = {
     'Officers': ['FirstName', 'LastName', 'Precinct', 'Badge', 'Status'], 
     'Appeals': "*",
     'Crime_codes': '*'
-}
-
-employee = {
-    "Alias": "*",
-    "Criminals": "*",
-    'Crimes': "*",
-    'Sentences': "*",
-    'Prob_officers': "*",
-    'Crime_charges': "*", 
-    'Crime_officers': "*",
-    'Officers': "*", 
-    'Appeals': "*",
-    'Crime_codes': "*"
 }
 
 '''
@@ -151,32 +138,42 @@ def registration():
                 error_message = f"Username '{request.form['uname']}' already exists. Please choose a different username."  # Set error message
     return render_template("registration.html", error_message=error_message)
 
-@app.route("/<username>/alias")
+@app.route("/<username>/alias",methods=['GET', 'POST'])
 def alias(username):
     runstatement('''use Criminal_Records''', commit=True)
-    
-    alias_id = request.args.get('alias_id')
-    alias = request.args.get('alias')
-    query = None
-    displayMode = 'none'  # Initialize displayMode variable
-
-    if alias_id:
-        query = f"Alias_ID = '{alias_id}'"
-        displayMode = 'inline-block'
-    elif alias:
-        query = f"Alias = '{alias}'" 
-        displayMode = 'inline-block'
+    if request.method == 'POST' and session.get("permission") == 'host':
+        alias_id = request.form.getlist('alias_id[]')
+        alias = request.form.getlist('alias[]')
+        criminal_id = request.form.getlist('criminal_id[]')
+        sql = f'''INSERT INTO Alias (Alias_ID, Alias, Criminal_ID) VALUES '''
+        for ind in range(len(alias_id)):
+            if ind == len(alias_id) - 1:
+                sql += f"({alias_id[ind]}, '{alias[ind]}', {criminal_id[ind]});"
+            else:
+                sql += f"({alias_id[ind]}, '{alias[ind]}', {criminal_id[ind]}),"
+        try:
+            print(sql)
+            runstatement(sql, commit=True)
+            return (runstatement("select * from Alias").to_html(classes="styled-table", index=False))
+        except:
+            return make_response("Error: Alias ID already exists or required data is missing.", 400)
     else:
+        alias_id = request.args.get('alias_id')
+        alias = request.args.get('alias')
         query = None
-    
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-
-    sql = generateStatementViewer('Alias', 'select', query, table)
-    df = runstatement(sql)
-    return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode)
+        displayMode = 'none'  # Initialize displayMode variable
+        if alias_id:
+            query = f"Alias_ID = '{alias_id}'"
+            displayMode = 'inline-block'
+        elif alias:
+            query = f"Alias = '{alias}'" 
+            displayMode = 'inline-block'
+        else:
+            query = None
+        sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/appeals")
 def appeals(username):
@@ -188,13 +185,7 @@ def appeals(username):
         displayMode = 'inline-block'
     else:
         query = None
-
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-        
-    sql = generateStatementViewer('Appeals', 'select', query, table)
+    sql = generateStatementViewer('Appeals', 'select', query, viewer['Appeals'])
     df = runstatement(sql)
     return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -208,13 +199,7 @@ def crime_charges(username):
         displayMode = 'inline-block'
     else:
         query = None
-
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-
-    sql = generateStatementViewer('Crime_charges', 'select', query, table)
+    sql = generateStatementViewer('Crime_charges', 'select', query, viewer['Crime_charges'])
     df = runstatement(sql)
     return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -228,13 +213,7 @@ def crime_codes(username):
         displayMode = 'inline-block'
     else:
         query = None
-
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-        
-    sql = generateStatementViewer('Crime_codes', 'select', query, table)
+    sql = generateStatementViewer('Crime_codes', 'select', query, viewer['Crime_codes'])
     df = runstatement(sql)
     return render_template("crime_codes.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -248,13 +227,7 @@ def crime_officers(username):
         displayMode = 'inline-block'
     else:
         query = None
-
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-
-    sql = generateStatementViewer('Crime_officers', 'select', query, table)
+    sql = generateStatementViewer('Crime_officers', 'select', query, viewer['Crime_officers'])
     df = runstatement(sql)
     return render_template("crime_officers.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -268,13 +241,7 @@ def crimes(username):
         query = f"Crime_ID = '{crime_id}'"
     else:
         query = None
-
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-
-    sql = generateStatementViewer('Crimes', 'select', query, table)
+    sql = generateStatementViewer('Crimes', 'select', query, viewer['Crimes'])
     df = runstatement(sql)
     return render_template("crimes.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -296,12 +263,7 @@ def criminals(username):
     else:
         query = None
 
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-
-    sql = generateStatementViewer('Criminals', 'select', query, table)
+    sql = generateStatementViewer('Criminals', 'select', query, viewer['Criminals'])
     df = runstatement(sql)
     return render_template("criminals.html", data=df.to_html(classes="styled-table", index=False), show=show)
 
@@ -323,12 +285,7 @@ def prob_officers(username):
     else:
         query = None
 
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-
-    sql = generateStatementViewer('Prob_officers', 'select', query, table)
+    sql = generateStatementViewer('Prob_officers', 'select', query, viewer['Prob_officers'])
     df = runstatement(sql)
     return render_template("prob_officers.html", data=df.to_html(classes="styled-table", index=False), show=display)
 
@@ -355,12 +312,7 @@ def officers(username):
     else:
         query = None
 
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-
-    sql = generateStatementViewer('Officers', 'select', query, table)
+    sql = generateStatementViewer('Officers', 'select', query, viewer['Officers'])
     df = runstatement(sql)
     return render_template("officers.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
@@ -375,16 +327,10 @@ def sentences(username):
         query = f"Sentence_ID = '{sentence_id}'"
     else:
         query = None
-
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee":
-        table = employee['Alias']
-
-    sql = generateStatementViewer('Sentences', 'select', query, table)
+    sql = generateStatementViewer('Sentences', 'select', query, viewer['Sentences'])
     df = runstatement(sql)
     return render_template("sentences.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 
 if __name__ == "__main__":
-    app.run(host="10.18.158.36",port="8080", debug=True)
+    app.run(debug=True)
