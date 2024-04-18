@@ -152,7 +152,6 @@ def registration():
     return render_template("registration.html", error_message=error_message)
 
 @app.route("/<username>/alias",methods=['GET', 'POST'])
-@app.route("/<username>/alias",methods=['GET', 'POST'])
 def alias(username):
     runstatement('''use Criminal_Records''', commit=True)
     if request.method == 'POST' and session.get("permission") == 'host':
