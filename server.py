@@ -1,4 +1,4 @@
-from flask import Flask, make_response, render_template, request, session, redirect, url_for, flash
+from flask import Flask, make_response, render_template, request, session, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
 import pandas as pd
 
@@ -208,22 +208,31 @@ def filter_alias(username):
         except:
             return make_response("Error: Alias ID already exists or required data is missing.", 400)
     else:
+        runstatement('''use Criminal_Records''', commit=True)
         alias_id = request.args.get('alias_id')
+        criminal_id = request.args.get('criminal_id')
         alias = request.args.get('alias')
-        query = None
-        displayMode = 'none'  # Initialize displayMode variable
+        query = ""
+
         if alias_id:
-            query = f"Alias_ID = '{alias_id}'"
-            displayMode = 'inline-block'
-        elif alias:
-            query = f"Alias = '{alias}'" 
-            displayMode = 'inline-block'
-        else:
-            query = None
-        sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
-        permission = session.get("permission")
+            query += f"Alias_ID = '{alias_id}'"
+        if criminal_id:
+            if query:
+                query += " AND "
+            query += f"Criminal_ID = '{criminal_id}'"
+        if alias:
+            if query:
+                query += " AND "
+            query += f"Alias = '{alias}'"
+
+        if session["permission"] == "viewer":
+            table = viewer['Alias']
+        elif session["permission"] == "employee":
+            table = employee['Alias']
+
+        sql = generateStatementViewer('Alias', 'select', query, table)
         df = runstatement(sql)
-        return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+        return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/appeals")
 def appeals(username):
