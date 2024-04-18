@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for, flash
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
 import pandas as pd
 
@@ -154,23 +154,9 @@ def registration():
 @app.route("/<username>/alias")
 def alias(username):
     runstatement('''use Criminal_Records''', commit=True)
-    
-    alias_id = request.args.get('alias_id')
-    alias = request.args.get('alias')
     query = None
     displayMode = 'none'  # Initialize displayMode variable
 
-    if alias_id:
-        query = f"Alias_ID = '{alias_id}'"
-        displayMode = 'inline-block'
-    elif alias:
-        query = f"Alias = '{alias}'" 
-        displayMode = 'inline-block'
-    else:
-        query = None
-
-   
-    
     if session["permission"] == "viewer":
         table = viewer['Alias']
     elif session["permission"] == "employee":
@@ -179,6 +165,30 @@ def alias(username):
     sql = generateStatementViewer('Alias', 'select', query, table)
     df = runstatement(sql)
     return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode)
+
+@app.route("/<username>/alias/filter", methods=['GET'])
+def filter_alias(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    alias_id = request.args.get('alias_id')
+    criminal_id = request.args.get('criminal_id')
+    alias = request.args.get('alias')
+    query = None
+
+    if alias_id:
+        query = f"Alias_ID = '{alias_id}'"
+    elif criminal_id:
+        query = f"Criminal_ID = '{criminal_id}'"
+    elif alias:
+        query = f"Alias = '{alias}'"
+
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee":
+        table = employee['Alias']
+
+    sql = generateStatementViewer('Alias', 'select', query, table)
+    df = runstatement(sql)
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/appeals")
 def appeals(username):
