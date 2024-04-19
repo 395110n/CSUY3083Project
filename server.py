@@ -1,4 +1,4 @@
-from flask import Flask, make_response, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, make_response, render_template, request, session, redirect, url_for, flash
 from flask_mysqldb import MySQL
 import pandas as pd
 
@@ -248,110 +248,41 @@ def appeals(username):
 def filter_appeals(username):
     runstatement('''use Criminal_Records''', commit=True)
     appeal_id = request.args.get('appeal_id')
-    crime_id = request.args.get('crime_id')
-    filing_date = request.args.get('filing_date')
-    hearing_date = request.args.get('hearing_date')
-    status = request.args.get('status')
-
-    query = ""
-
+    displayMode = 'none'
     if appeal_id:
-        query += f"Appeal_ID = '{appeal_id}'"
-    if crime_id:
-        if query:
-            query += " AND "
-        query += f"Crime_ID = '{crime_id}'"
-    if filing_date:
-        if query:
-            query += " AND "
-        query += f"Filing_date = '{filing_date}'"
-    if hearing_date:
-        if query:
-            query += " AND "
-        query += f"Hearing_date = '{hearing_date}'"
-    if status:
-        if query:
-            query += " AND "
-        query += f"Status = '{status}'"
+        query = f"Appeal_ID = '{appeal_id}'"
+        displayMode = 'inline-block'
+    else:
+        query = None
 
     if session["permission"] == "viewer":
         table = viewer['Appeals']
-    else:
+    elif session["permission"] == "employee" or "host":
         table = employee['Appeals']
-
+        
     sql = generateStatementViewer('Appeals', 'select', query, table)
     df = runstatement(sql)
-    return df.to_html(classes="styled-table", index=False)
+    return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/crime_charges")
 def crime_charges(username):
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
-
-    if session["permission"] == "viewer":
-        table = viewer['Crime_charges']
-    else:
-        table = employee['Crime_charges']
-
-    sql = generateStatementViewer('Crime_charges', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
-
-@app.route("/<username>/crime_charges/filter", methods=['GET'])
-def filter_crime_charges(username):
-    runstatement('''use Criminal_Records''', commit=True)
+    displayMode = 'none'
     charge_id = request.args.get('charge_id')
-    crime_id = request.args.get('crime_id')
-    crime_code = request.args.get('crime_code')
-    charge_status = request.args.get('charge_status')
-    fine_amount = request.args.get('fine_amount')
-    court_fee = request.args.get('court_fee')
-    amount_paid = request.args.get('amount_paid')
-    pay_due_date = request.args.get('pay_due_date')
-
-    query = ""
-
     if charge_id:
-        query += f"Charge_ID = '{charge_id}'"
-    if crime_id:
-        if query:
-            query += " AND "
-        query += f"Crime_ID = '{crime_id}'"
-    if crime_code:
-        if query:
-            query += " AND "
-        query += f"Crime_code = '{crime_code}'"
-    if charge_status:
-        if query:
-            query += " AND "
-        query += f"Charge_status = '{charge_status}'"
-    if fine_amount:
-        if query:
-            query += " AND "
-        query += f"Fine_amount = '{fine_amount}'"
-    if court_fee:
-        if query:
-            query += " AND "
-        query += f"court_fee = '{court_fee}'"
-    if amount_paid:
-        if query:
-            query += " AND "
-        query += f"amount_paid = '{amount_paid}'"
-    if pay_due_date:
-        if query:
-            query += " AND "
-        query += f"pay_due_date = '{pay_due_date}'"
+        query = f"Charge_ID = '{charge_id}'"
+        displayMode = 'inline-block'
+    else:
+        query = None
 
     if session["permission"] == "viewer":
         table = viewer['Crime_charges']
-    else:
+    elif session["permission"] == "employee" or "host":
         table = employee['Crime_charges']
 
     sql = generateStatementViewer('Crime_charges', 'select', query, table)
     df = runstatement(sql)
-    return df.to_html(classes="styled-table", index=False)
+    return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
 
 @app.route("/<username>/crime_codes")
 def crime_codes(username):
