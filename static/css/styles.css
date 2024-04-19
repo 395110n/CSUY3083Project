@@ -128,3 +128,23 @@ body {
   max-height: 600px; /* Set the maximum height for the table */
   overflow-y: auto; /* Enable vertical scrolling */
 }
+
+.flash-messages {
+  margin-bottom: 20px;
+}
+
+.flash-message {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.success {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.error {
+  background-color: #dc3545;
+  color: #fff;
+}
+

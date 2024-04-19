@@ -1,4 +1,4 @@
-from flask import Flask, make_response, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, make_response, render_template, request, session, redirect, url_for, flash
 from flask_mysqldb import MySQL
 import pandas as pd
 
@@ -814,6 +814,29 @@ def filter_sentences(username):
     sql = generateStatementViewer('Sentences', 'select', query, table)
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
+
+@app.route("/change_password", methods=['POST'])
+def change_password():
+    new_password = request.form.get('new_password')
+    confirm_password = request.form.get('confirm_password')
+    
+    if not new_password or not confirm_password:
+        flash("Please enter and confirm the new password.")
+        return redirect(url_for('profile', username=session['username']))
+    
+    if new_password != confirm_password:
+        flash("New password and confirm password do not match.")
+        return redirect(url_for('profile', username=session['username']))
+    
+    username = session['username']
+    
+    # Update the password in the database
+    runstatement(f"UPDATE Usrs SET usr_PW = '{new_password}' WHERE usr_ID = '{username}'", commit=True)
+    
+    flash("Password changed successfully.")
+    return redirect(url_for('profile', username=username))
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
