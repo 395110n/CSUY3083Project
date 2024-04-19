@@ -167,23 +167,43 @@ def alias(username):
         try:
             print(sql)
             runstatement(sql, commit=True)
-            return (runstatement("select * from Alias").to_html(classes="styled-table", index=False))
+            runstatement('''use Criminal_Records''', commit=True)
+            alias_id = request.args.get('alias_id')
+            criminal_id = request.args.get('criminal_id')
+            alias = request.args.get('alias')
+            query = ""
+
+            if alias_id:
+                query += f"Alias_ID = '{alias_id}'"
+            if criminal_id:
+                if query:
+                    query += " AND "
+                query += f"Criminal_ID = '{criminal_id}'"
+            if alias:
+                if query:
+                    query += " AND "
+                query += f"Alias = '{alias}'"
+
+            if session["permission"] == "viewer":
+                table = viewer['Alias']
+            else:
+                table = employee['Alias']
+
+            sql = generateStatementViewer('Alias', 'select', query, table)
+            df = runstatement(sql)
+            return df.to_html(classes="styled-table", index=False)
         except:
             return make_response("Error: Alias ID already exists or required data is missing.", 400)
     else:
-        alias_id = request.args.get('alias_id')
-        alias = request.args.get('alias')
         query = None
-        displayMode = 'none'  # Initialize displayMode variable
-        if alias_id:
-            query = f"Alias_ID = '{alias_id}'"
-            displayMode = 'inline-block'
-        elif alias:
-            query = f"Alias = '{alias}'" 
-            displayMode = 'inline-block'
+        displayMode = 'inline-block'
+
+        if session["permission"] == "viewer":
+            table = viewer['Alias']
         else:
-            query = None
-        sql = generateStatementViewer('Alias', 'select', query, viewer['Alias'])
+            table = employee['Alias']
+
+        sql = generateStatementViewer('Alias', 'select', query, table)
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
@@ -204,7 +224,31 @@ def filter_alias(username):
         try:
             print(sql)
             runstatement(sql, commit=True)
-            return (runstatement("select * from Alias").to_html(classes="styled-table", index=False))
+            runstatement('''use Criminal_Records''', commit=True)
+            alias_id = request.args.get('alias_id')
+            criminal_id = request.args.get('criminal_id')
+            alias = request.args.get('alias')
+            query = ""
+
+            if alias_id:
+                query += f"Alias_ID = '{alias_id}'"
+            if criminal_id:
+                if query:
+                    query += " AND "
+                query += f"Criminal_ID = '{criminal_id}'"
+            if alias:
+                if query:
+                    query += " AND "
+                query += f"Alias = '{alias}'"
+
+            if session["permission"] == "viewer":
+                table = viewer['Alias']
+            else:
+                table = employee['Alias']
+
+            sql = generateStatementViewer('Alias', 'select', query, table)
+            df = runstatement(sql)
+            return df.to_html(classes="styled-table", index=False)
         except:
             return make_response("Error: Alias ID already exists or required data is missing.", 400)
     else:
@@ -227,7 +271,7 @@ def filter_alias(username):
 
         if session["permission"] == "viewer":
             table = viewer['Alias']
-        elif session["permission"] == "employee":
+        else:
             table = employee['Alias']
 
         sql = generateStatementViewer('Alias', 'select', query, table)
