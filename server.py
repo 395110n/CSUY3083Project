@@ -281,22 +281,58 @@ def filter_alias(username):
 @app.route("/<username>/appeals")
 def appeals(username):
     runstatement('''use Criminal_Records''', commit=True)
-    appeal_id = request.args.get('appeal_id')
-    displayMode = 'none'
-    if appeal_id:
-        query = f"Appeal_ID = '{appeal_id}'"
-        displayMode = 'inline-block'
-    else:
-        query = None
+    query = None
+    displayMode = 'inline-block'
 
     if session["permission"] == "viewer":
         table = viewer['Appeals']
-    elif session["permission"] == "employee" or "host":
+    else:
         table = employee['Appeals']
-        
+
+    sql = generateStatementViewer('Appeals', 'select', query, table)
+    permission = session.get("permission")
+    df = runstatement(sql)
+    return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+
+
+@app.route("/<username>/appeals/filter", methods=['GET'])
+def filter_appeals(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    appeal_id = request.args.get('appeal_id')
+    crime_id = request.args.get('crime_id')
+    filing_date = request.args.get('filing_date')
+    hearing_date = request.args.get('hearing_date')
+    status = request.args.get('status')
+
+    query = ""
+
+    if appeal_id:
+        query += f"Appeal_ID = '{appeal_id}'"
+    if crime_id:
+        if query:
+            query += " AND "
+        query += f"Crime_ID = '{crime_id}'"
+    if filing_date:
+        if query:
+            query += " AND "
+        query += f"Filing_date = '{filing_date}'"
+    if hearing_date:
+        if query:
+            query += " AND "
+        query += f"Hearing_date = '{hearing_date}'"
+    if status:
+        if query:
+            query += " AND "
+        query += f"Status = '{status}'"
+
+    if session["permission"] == "viewer":
+        table = viewer['Appeals']
+    else:
+        table = employee['Appeals']
+
     sql = generateStatementViewer('Appeals', 'select', query, table)
     df = runstatement(sql)
-    return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False),displayMode=displayMode)
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/crime_charges")
 def crime_charges(username):
