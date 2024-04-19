@@ -18,7 +18,51 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      // Function to clear input fields when modal is closed
+      $(document).ready(function () {
+        $("#filterModal").on("hidden.bs.modal", function () {
+          console.log("Modal hidden event triggered."); // Log event for debugging
+          // Clear input fields inside the form with id "filterForm"
+          $("#filterForm")[0].reset();
+          console.log("Form reset."); // Log form reset for debugging
+        });
+      });
+
+      // Function to submit filter form
+      function submitFilter() {
+        var form = $("#filterForm").serialize();
+        $.ajax({
+          type: "GET",
+          url: "{{ url_for('filter_alias', username=session['username']) }}",
+          data: form,
+          success: function (data) {
+            $(".scrollable-table").html(data); // Replace existing content with filtered data
+            $("#filterModal").modal("hide");
+          },
+          error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+          },
+        });
+      }
+
+      function clearFilter() {
+        window.location.href =
+          "{{ url_for('alias', username=session['username']) }}";
+      }
+    </script>
   </head>
   <body>
     <!-- Sidebar navigation -->
@@ -62,84 +106,156 @@
     <!-- Main content -->
     <div class="content">
       <h1>Alias</h1>
-      <div class="search-container">
-        <form
-          name="filter"
-          style="display: inline-block"
-          action="{{ url_for('alias', username=session['username']) }}"
-          method="GET"
-        >
-          <input type="text" placeholder="Enter Alias ID" name="alias_id" />
-          <button type="submit" onclick="showClear()">
-            <i class="fa fa-search"></i>
-          </button>
-        </form>
-        <br />
-        <form
-          name="filterName"
-          style="display: inline-block"
-          action="{{ url_for('alias', username=session['username']) }}"
-          method="GET"
-        >
-          <input type="text" placeholder="Enter Alias Name" name="alias" />
-          <button type="submit"><i class="fa fa-search"></i></button>
-        </form>
-        <br />
-        <button
-          type="button"
-          id="clear"
-          onclick="clearFilter()"
-          style="display:{{displayMode}};"
-        >
-          Clear Filter
-        </button>
-        <!-- use flask mode to pass the value to it to control the display or not -->
+      <!-- Add a button to trigger the modal -->
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#filterModal"
+      >
+        Filter
+      </button>
+
+      <!-- Add a Clear Filter button -->
+      <button type="button" class="btn btn-secondary" onclick="clearFilter()">
+        Clear Filter
+      </button>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="filterModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="filterModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="filterModalLabel">
+                Filter Alias Data
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="filterForm">
+                <div class="form-group">
+                  <label for="alias_id">Alias ID</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="alias_id"
+                    name="alias_id"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="criminal_id">Criminal ID</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="criminal_id"
+                    name="criminal_id"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="alias">Alias</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="alias"
+                    name="alias"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="submitFilter()"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="scrollable-table" id="table-container">
         {{ data | safe }}
         <!-- Render the table data here -->
       </div>
-      
 
-      <div class="Insert" style="display:{% if permission != 'host' %}none{% else %}block{% endif %};">
+      <div
+        class="Insert"
+        style="display:{% if permission != 'host' %}none{% else %}block{% endif %};"
+      >
         <h2>Insert Alias</h2>
-        <form
-          id="insert-form"
-        >
-          <div id="insert-form-div" style="max-height: 200px;max-width: 100%; overflow-y: scroll;">
-            <button type="button" onclick="insertRow()"><i class="fa-solid fa-plus"></i></button>
-            <button type="button" onclick="deleteRow()"><i class="fa-solid fa-minus"></i></button>
-            <br>
-            <br>
-            <div style="width: 100%;">
+        <form id="insert-form">
+          <div
+            id="insert-form-div"
+            style="max-height: 200px; max-width: 100%; overflow-y: scroll"
+          >
+            <button type="button" onclick="insertRow()">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+            <button type="button" onclick="deleteRow()">
+              <i class="fa-solid fa-minus"></i>
+            </button>
+            <br />
+            <br />
+            <div style="width: 55%">
               <label for="alias_id0">Alias ID:</label>
-              <input type="text" id="alias_id0" name="alias_id[]" required  />
+              <input type="text" id="alias_id0" name="alias_id[]" required />
               <label for="criminal_id0">Criminal ID:</label>
-              <input type="text" id="criminal_id0" name="criminal_id[]" required />
+              <input
+                type="text"
+                id="criminal_id0"
+                name="criminal_id[]"
+                required
+              />
               <label for="alias0">Alias:</label>
               <input type="text" id="alias0" name="alias[]" required />
-              <br>
-              <br>
+              <br />
+              <br />
             </div>
           </div>
-          <button id="insertButton" type="submit" onclick="submitForm()" style="margin-left: 50% ;">Insert</button>      
+          <button
+            id="insertButton"
+            type="submit"
+            onclick="submitForm()"
+            style="margin-left: 50%"
+          >
+            Insert
+          </button>
         </form>
       </div>
       <span id="error_message"></span>
     </div>
+
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+
     <script>
-      
-      function clearFilter() {
-        window.location.href =
-          "{{ url_for('alias', username=session['username']) }}";
-      }
       var count = 1;
-      function insertRow(){
-        var newdiv = document.createElement('div');
-        newdiv.style="width: 100%;";
-        newdiv.innerHTML=`
+      function insertRow() {
+        var newdiv = document.createElement("div");
+        newdiv.style = "width: 55%;";
+        newdiv.innerHTML = `
           <label for="alias_id${count}">Alias ID:</label>
           <input type="text" id="alias_id${count}" name="alias_id[]" required />
           <label for="criminal_id${count}">Criminal ID:</label>
@@ -148,37 +264,43 @@
           <input type="text" id="alias${count}" name="alias[]" required />
           <br>
           <br>`;
-        document.getElementById('insert-form-div').appendChild(newdiv);
+        document.getElementById("insert-form-div").appendChild(newdiv);
         count++;
       }
-      function deleteRow(){
-        var lastDivChild = document.querySelector('#insert-form-div > div:last-child');
+      function deleteRow() {
+        var lastDivChild = document.querySelector(
+          "#insert-form-div > div:last-child"
+        );
         // it is id selector, so it will only select the last child of the div
-        if(count > 1){
-          document.getElementById('insert-form-div').removeChild(lastDivChild);
+        if (count > 1) {
+          document.getElementById("insert-form-div").removeChild(lastDivChild);
           count--;
         }
       }
       function submitForm() {
         event.preventDefault();
-        //prevent reload my page 
+        //prevent reload my page
         var form = document.getElementById("insert-form");
         var formData = new FormData(form);
-          //asynchronous request to the server, it will not reload the page
+        //asynchronous request to the server, it will not reload the page
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "{{ url_for('alias', username=session['username']) }}", true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                document.getElementById("table-container").innerHTML = xhr.responseText;
-                document.getElementById("insert-form").reset();
-                //clear the form after insert successfully
+        xhr.open(
+          "POST",
+          "{{ url_for('alias', username=session['username']) }}",
+          true
+        );
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            document.getElementById("table-container").innerHTML =
+              xhr.responseText;
+            document.getElementById("insert-form").reset();
+            //clear the form after insert successfully
+          } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            var error_message = document.getElementById("error_message");
+            if (error_message != null) {
+              error_message.innerHTML = xhr.responseText;
             }
-            else if (xhr.readyState === 4 && xhr.status !== 200) {
-                var error_message = document.getElementById("error_message");
-                if (error_message != null) {
-                    error_message.innerHTML = xhr.responseText;
-                }
-            }
+          }
         };
         xhr.send(formData);
       }
