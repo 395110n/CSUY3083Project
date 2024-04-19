@@ -125,6 +125,6 @@ body {
 }
 
 .scrollable-table {
-  max-height: 300px; /* Set the maximum height for the table */
+  max-height: 600px; /* Set the maximum height for the table */
   overflow-y: auto; /* Enable vertical scrolling */
 }

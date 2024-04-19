@@ -175,7 +175,7 @@ def alias(username):
 
     if session["permission"] == "viewer":
         table = viewer['Alias']
-    else:
+    elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Alias']
 
     sql = generateStatementViewer('Alias', 'select', query, table)
@@ -221,7 +221,7 @@ def filter_alias(username):
 
     if session["permission"] == "viewer":
         table = viewer['Alias']
-    else:
+    elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Alias']
 
     sql = generateStatementViewer('Alias', 'select', query, table)
@@ -236,7 +236,7 @@ def appeals(username):
 
     if session["permission"] == "viewer":
         table = viewer['Appeals']
-    else:
+    elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Appeals']
 
     sql = generateStatementViewer('Appeals', 'select', query, table)
@@ -276,7 +276,7 @@ def filter_appeals(username):
 
     if session["permission"] == "viewer":
         table = viewer['Appeals']
-    else:
+    elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Appeals']
 
     sql = generateStatementViewer('Appeals', 'select', query, table)
@@ -291,7 +291,7 @@ def crime_charges(username):
 
     if session["permission"] == "viewer":
         table = viewer['Crime_charges']
-    else:
+    elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Crime_charges']
 
     sql = generateStatementViewer('Crime_charges', 'select', query, table)
@@ -346,7 +346,7 @@ def filter_crime_charges(username):
 
     if session["permission"] == "viewer":
         table = viewer['Crime_charges']
-    else:
+    elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Crime_charges']
 
     sql = generateStatementViewer('Crime_charges', 'select', query, table)
@@ -386,7 +386,7 @@ def filter_crime_codes(username):
 
     if session["permission"] == "viewer":
         table = viewer['Crime_officers']
-    else:
+    elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Crime_officers']
 
     sql = generateStatementViewer('Crime_codes', 'select', query, table)
@@ -491,7 +491,7 @@ def filter_crimes(username):
 
     if session["permission"] == "viewer":
         table = viewer['Crimes']
-    else:
+    elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Crimes']
 
     sql = generateStatementViewer('Crimes', 'select', query, table)
@@ -517,7 +517,15 @@ def criminals(username):
 @app.route("/<username>/criminals/filter", methods=['GET'])
 def filter_criminals(username):
     runstatement('''use Criminal_Records''', commit=True)
-    if session["permission"] == "employee" or "host":
+
+    criminal_id = None
+    street = None
+    city = None
+    state = None
+    zip = None
+    phone = None
+
+    if session["permission"] == "employee" or session["permission"] == "host":
         criminal_id = request.args.get('criminal_id')
         street = request.args.get('street')
         city = request.args.get('city')
@@ -532,7 +540,7 @@ def filter_criminals(username):
 
     query = ""
 
-    if (session["permission"] == "employee" or "host") and criminal_id:
+    if criminal_id:
         query += f"criminal_id = '{criminal_id}'"
     if lastName:
         if query:
@@ -542,23 +550,23 @@ def filter_criminals(username):
         if query:
             query += " AND "
         query += f"firstName = '{firstName}'"
-    if (session["permission"] == "employee" or "host") and street:
+    if street:
         if query:
             query += " AND "
         query += f"street = '{street}'"
-    if (session["permission"] == "employee" or "host") and city:
+    if city:
         if query:
             query += " AND "
         query += f"city = '{city}'"
-    if (session["permission"] == "employee" or "host") and state:
+    if state:
         if query:
             query += " AND "
         query += f"state = '{state}'"
-    if (session["permission"] == "employee" or "host") and zip:
+    if zip:
         if query:
             query += " AND "
         query += f"zip = '{zip}'"
-    if (session["permission"] == "employee" or "host") and phone:
+    if phone:
         if query:
             query += " AND "
         query += f"phone = '{phone}'"
@@ -572,7 +580,7 @@ def filter_criminals(username):
         query += f"p_status = '{p_status}'"
 
     if session["permission"] == "viewer":
-        table = viewer['Crime_officers']
+        table = viewer['Criminals']
     elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Criminals']
 
@@ -596,6 +604,81 @@ def prob_officers(username):
     df = runstatement(sql)
     return render_template("prob_officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
+@app.route("/<username>/prob_officers/filter", methods=['GET'])
+def filter_prob_officers(username):
+    runstatement('''use Criminal_Records''', commit=True)
+
+    prob_id = None
+    street = None
+    city = None
+    state = None
+    zip = None
+    phone = None
+    email = None
+
+    if session["permission"] == "employee" or session["permission"] == "host":
+        prob_id = request.args.get('prob_id')
+        street = request.args.get('street')
+        city = request.args.get('city')
+        state = request.args.get('state')
+        zip = request.args.get('zip')
+        phone = request.args.get('phone')
+        email = request.args.get('email')
+    
+    lastName = request.args.get('lastName')
+    firstName = request.args.get('firstName')
+    status = request.args.get('status')
+
+    query = ""
+
+    if prob_id:
+        query += f"prob_id = '{prob_id}'"
+    if lastName:
+        if query:
+            query += " AND "
+        query += f"lastName = '{lastName}'"
+    if firstName:
+        if query:
+            query += " AND "
+        query += f"firstName = '{firstName}'"
+    if street:
+        if query:
+            query += " AND "
+        query += f"street = '{street}'"
+    if city:
+        if query:
+            query += " AND "
+        query += f"city = '{city}'"
+    if state:
+        if query:
+            query += " AND "
+        query += f"state = '{state}'"
+    if zip:
+        if query:
+            query += " AND "
+        query += f"zip = '{zip}'"
+    if phone:
+        if query:
+            query += " AND "
+        query += f"phone = '{phone}'"
+    if email:
+        if query:
+            query += " AND "
+        query += f"email = '{email}'"
+    if status:
+        if query:
+            query += " AND "
+        query += f"status = '{status}'"
+
+    if session["permission"] == "viewer":
+        table = viewer['Prob_officers']
+    elif session["permission"] == "employee" or session["permission"] == "host":
+        table = employee['Prob_officers']
+
+    sql = generateStatementViewer('Prob_officers', 'select', query, table)
+    df = runstatement(sql)
+    return df.to_html(classes="styled-table", index=False)
+
 @app.route("/<username>/officers")
 def officers(username):
     runstatement('''use Criminal_Records''', commit=True)
@@ -612,6 +695,60 @@ def officers(username):
     df = runstatement(sql)
     return render_template("officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
+@app.route("/<username>/officers/filter", methods=['GET'])
+def filter_officers(username):
+    runstatement('''use Criminal_Records''', commit=True)
+
+    officer_id = None
+    phone = None
+    
+    if session["permission"] == "employee" or session["permission"] == "host":
+        officer_id = request.args.get('officer_id')
+        phone = request.args.get('phone')
+    
+    lastName = request.args.get('lastName')
+    firstName = request.args.get('firstName')
+    precinct = request.args.get('precinct')
+    badge = request.args.get('badge')
+    status = request.args.get('status')
+
+    query = ""
+
+    if officer_id:
+        query += f"officer_id = '{officer_id}'"
+    if lastName:
+        if query:
+            query += " AND "
+        query += f"lastName = '{lastName}'"
+    if firstName:
+        if query:
+            query += " AND "
+        query += f"firstName = '{firstName}'"
+    if precinct:
+        if query:
+            query += " AND "
+        query += f"precinct = '{precinct}'"
+    if badge:
+        if query:
+            query += " AND "
+        query += f"badge = '{badge}'"
+    if phone:
+        if query:
+            query += " AND "
+        query += f"phone = '{phone}'"
+    if status:
+        if query:
+            query += " AND "
+        query += f"status = '{status}'"
+
+    if session["permission"] == "viewer":
+        table = viewer['Officers']
+    elif session["permission"] == "employee" or session["permission"] == "host":
+        table = employee['Officers']
+
+    sql = generateStatementViewer('Officers', 'select', query, table)
+    df = runstatement(sql)
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/sentences")
 def sentences(username):

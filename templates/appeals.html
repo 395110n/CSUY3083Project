@@ -46,7 +46,7 @@
         var form = $("#filterForm").serialize();
         $.ajax({
           type: "GET",
-          url: "{{ url_for('filter_alias', username=session['username']) }}",
+          url: "{{ url_for('filter_appeals', username=session['username']) }}",
           data: form,
           success: function (data) {
             $(".scrollable-table").html(data); // Replace existing content with filtered data
@@ -60,7 +60,7 @@
 
       function clearFilter() {
         window.location.href =
-          "{{ url_for('alias', username=session['username']) }}";
+          "{{ url_for('appeals', username=session['username']) }}";
       }
     </script>
   </head>
