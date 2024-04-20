@@ -166,42 +166,24 @@ def alias(username):
             else:
                 sql += f"({alias_id[ind]}, '{alias[ind]}', {criminal_id[ind]}),"
         try:
-            print(sql)
             runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Alias''')
+            return df.to_html(classes="styled-table", index=False)
         except:
             return make_response("Error: Alias ID already exists or required data is missing.", 400)
-    
-    query = None
-    displayMode = 'inline-block'
+    else:
+        query = None
+        displayMode = 'inline-block'
 
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Alias']
+        if session["permission"] == "viewer":
+            table = viewer['Alias']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Alias']
 
-    sql = generateStatementViewer('Alias', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
-
-@app.route("/<username>/alias/filter", methods=['GET'])
-def filter_alias(username):
-    runstatement('''use Criminal_Records''', commit=True)
-    if request.method == 'POST' and session.get("permission") == 'host':
-        alias_id = request.form.getlist('alias_id[]')
-        alias = request.form.getlist('alias[]')
-        criminal_id = request.form.getlist('criminal_id[]')
-        sql = f'''INSERT INTO Alias (Alias_ID, Alias, Criminal_ID) VALUES '''
-        for ind in range(len(alias_id)):
-            if ind == len(alias_id) - 1:
-                sql += f"({alias_id[ind]}, '{alias[ind]}', {criminal_id[ind]});"
-            else:
-                sql += f"({alias_id[ind]}, '{alias[ind]}', {criminal_id[ind]}),"
-        try:
-            print(sql)
-            runstatement(sql, commit=True)
-        except:
-            return make_response("Error: Alias ID already exists or required data is missing.", 400)
+        sql = generateStatementViewer('Alias', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
     
     runstatement('''use Criminal_Records''', commit=True)
     alias_id = request.args.get('alias_id')
