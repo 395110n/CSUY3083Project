@@ -18,6 +18,51 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      // Function to clear input fields when modal is closed
+      $(document).ready(function () {
+        $("#filterModal").on("hidden.bs.modal", function () {
+          console.log("Modal hidden event triggered."); // Log event for debugging
+          // Clear input fields inside the form with id "filterForm"
+          $("#filterForm")[0].reset();
+          console.log("Form reset."); // Log form reset for debugging
+        });
+      });
+
+      // Function to submit filter form
+      function submitFilter() {
+        var form = $("#filterForm").serialize();
+        $.ajax({
+          type: "GET",
+          url: "{{ url_for('filter_prob_officers', username=session['username']) }}",
+          data: form,
+          success: function (data) {
+            $(".scrollable-table").html(data); // Replace existing content with filtered data
+            $("#filterModal").modal("hide");
+          },
+          error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+          },
+        });
+      }
+
+      function clearFilter() {
+        window.location.href =
+          "{{ url_for('prob_officers', username=session['username']) }}";
+      }
+    </script>
   </head>
   <body>
     <!-- Sidebar navigation -->
@@ -59,45 +104,164 @@
     <!-- Main content -->
     <div class="content">
       <h1>Probation Officers</h1>
-      <div class="search-container">
-        <form
-          style="display: inline-block"
-          action="{{ url_for('prob_officers', username=session['username']) }}"
-          method="GET"
-        >
-          <input type="text" placeholder="Enter Prob ID" name="prob_id" />
-          <button type="submit"><i class="fa fa-search"></i></button>
-        </form>
-        <br />
-        <form
-          style="display: inline-block"
-          action="{{ url_for('prob_officers', username=session['username']) }}"
-          method="GET"
-        >
-          <input type="text" placeholder="Enter First Name" name="FirstName" />
-          <input type="text" placeholder="Enter Last Name" name="LastName" />
-          <button type="submit"><i class="fa fa-search"></i></button>
-        </form>
-        <br />
 
-        <button
-          type="button"
-          id="clear"
-          onclick="clearFilter()"
-          style="display:{{show}};"
-        >
-          Clear Filter
-        </button>
-        <div class="scrollable-table">
-          {{ data | safe }}
-          <!-- Render the table data here -->
+      <!-- Add a button to trigger the modal -->
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#filterModal"
+      >
+        Filter
+      </button>
+
+      <!-- Add a Clear Filter button -->
+      <button type="button" class="btn btn-secondary" onclick="clearFilter()">
+        Clear Filter
+      </button>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="filterModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="filterModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="filterModalLabel">
+                Filter Probation Officers Data
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="filterForm">
+                {% if permission in ['employee', 'host'] %}
+                <div class="form-group">
+                  <label for="prob_id">Prob ID</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="prob_id"
+                    name="prob_id"
+                  />
+                </div>
+                {% endif %}
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    name="firstName"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastName"
+                    name="lastName"
+                  />
+                </div>
+                {% if permission in ['employee', 'host'] %}
+                <div class="form-group">
+                  <label for="street">Street</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="street"
+                    name="street"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="city"
+                    name="city"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="state">State</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="state"
+                    name="state"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="zip">Zip</label>
+                  <input type="text" class="form-control" id="zip" name="zip" />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="phone"
+                    name="phone"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  />
+                </div>
+                {% endif %}
+                <div class="form-group">
+                  <label for="status">Status</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="status"
+                    name="status"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="submitFilter()"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="scrollable-table">
+        {{ data | safe }}
+        <!-- Render the table data here -->
+      </div>
+    </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
-    <script>
-      function clearFilter() {
-        window.location.href =
-          "{{ url_for('prob_officers', username=session['username']) }}";
-      }
-    </script>
   </body>
 </html>

@@ -63,6 +63,38 @@
         <p><strong>First Name:</strong> {{ session["firstName"] }}</p>
         <p><strong>Last Name:</strong> {{ session["lastName"] }}</p>
       </div>
+
+      <!-- Flash messages -->
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+        <div
+          class="flash-message {% if message.startswith('Password changed successfully.') %}success{% elif message.startswith('New password and confirm password do not match.') %}error{% endif %}"
+        >
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <!-- Change Password Form -->
+      <form action="{{ url_for('change_password') }}" method="post">
+        <input
+          type="password"
+          name="new_password"
+          id="new_password"
+          placeholder="Enter new password"
+          required
+        />
+        <input
+          type="password"
+          name="confirm_password"
+          id="confirm_password"
+          placeholder="Confirm new password"
+          required
+        />
+        <button type="submit">Change Password</button>
+      </form>
     </div>
 
     <!-- Logout button -->

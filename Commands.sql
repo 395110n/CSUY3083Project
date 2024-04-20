@@ -9,6 +9,16 @@ begin
 end$$
 delimiter ;
 
+-- Trigger in Usrs
+delimiter $$
+create or replace trigger EncodeNewPW
+before update on usrs
+for each row
+begin
+    SET NEW.usr_PW = SHA2(NEW.usr_PW, 256);
+  
+end$$
+delimiter ;
 
 -- Procedure for check Login
 delimiter $$
