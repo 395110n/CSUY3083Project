@@ -142,6 +142,7 @@ def registration():
                 session["lastName"] = request.form['lname']
                 session["username"] = request.form['uname']
                 session["password"] = request.form['pwd']
+                
                 runstatement("use Usrs", commit= True)
                 runstatement(f"""INSERT INTO Usrs (usr_ID, usr_PW, firstName, lastName) VALUES 
                             ('{session["username"]}', '{session["password"]}', 
