@@ -185,7 +185,6 @@ def alias(username):
     return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/alias/filter", methods=['GET'])
-def filter_alias(username):
     
     
 @app.route("/<username>/appeals")
