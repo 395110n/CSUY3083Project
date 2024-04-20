@@ -166,23 +166,25 @@ def alias(username):
             else:
                 sql += f"({alias_id[ind]}, '{alias[ind]}', {criminal_id[ind]}),"
         try:
-            print(sql)
             runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Alias''')
+            return df.to_html(classes="styled-table", index=False)
         except:
             return make_response("Error: Alias ID already exists or required data is missing.", 400)
+    else:
+        query = None
+        displayMode = 'inline-block'
+
+        if session["permission"] == "viewer":
+            table = viewer['Alias']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Alias']
+
+        sql = generateStatementViewer('Alias', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
     
-    query = None
-    displayMode = 'inline-block'
-
-    if session["permission"] == "viewer":
-        table = viewer['Alias']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Alias']
-
-    sql = generateStatementViewer('Alias', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/alias/filter", methods=['GET'])
 def filter_alias(username):
