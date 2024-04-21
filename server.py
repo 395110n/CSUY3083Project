@@ -196,9 +196,30 @@ def alias(username):
         df = runstatement(sql)
         return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
     
-
 @app.route("/<username>/alias/filter", methods=['GET'])
-    
+def filter_alias(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    alias_id = request.args.get('alias_id')
+    criminal_id = request.args.get('criminal_id')
+    alias = request.args.get('alias')
+    query = ""
+    if alias_id:
+        query += f"Alias_ID = '{alias_id}'"
+    if criminal_id:
+        if query:
+            query += " AND "
+        query += f"Criminal_ID = '{criminal_id}'"
+    if alias:
+        if query:
+            query += " AND "
+        query += f"Alias = '{alias}'"
+    if session["permission"] == "viewer":
+        table = viewer['Alias']
+    elif session["permission"] == "employee" or session["permission"] == "host":
+        table = employee['Alias']
+    sql = generateStatementViewer('Alias', 'select', query, table)
+    df = runstatement(sql)
+    return df.to_html(classes="styled-table", index=False)
     
 @app.route("/<username>/appeals", methods=['GET', 'POST'])
 def appeals(username):
