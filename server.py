@@ -151,11 +151,13 @@ def registration():
             else:
                 error_message = f"Username '{request.form['uname']}' already exists. Please choose a different username."  # Set error message
     return render_template("registration.html", error_message=error_message)
-
+    
 @app.route("/<username>/alias",methods=['GET', 'POST'])
 def alias(username):
     runstatement('''use Criminal_Records''', commit=True)
     if request.method == 'POST' and session.get("permission") == 'host':
+        # action = request.form.get('action')
+        # if action == "insert":
         alias_id = request.form.getlist('alias_id[]')
         alias = request.form.getlist('alias[]')
         criminal_id = request.form.getlist('criminal_id[]')
@@ -171,6 +173,15 @@ def alias(username):
             return df.to_html(classes="styled-table", index=False)
         except:
             return make_response("Error: Alias ID already exists or required data is missing.", 400)
+        # if action == "EnterCommands":
+        #     sql = request.form.get('textbox')
+        #     try:
+        #         runstatement(sql, commit=True)
+        #         df = runstatement('''SELECT * FROM Alias''')
+        #         return df.to_html(classes="styled-table", index=False)
+        #     except:
+        #         return make_response("Not Applicable SQL Command", 400)
+
     else:
         query = None
         displayMode = 'inline-block'
