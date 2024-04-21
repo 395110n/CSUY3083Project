@@ -194,7 +194,7 @@ def filter_alias(username):
         table = viewer['Alias']
     elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Alias']
-        
+
     sql = generateStatementViewer('Alias', 'select', query, table)
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
@@ -412,9 +412,9 @@ def filter_crime_codes(username):
         query += f"code_description = '{code_description}'"
 
     if session["permission"] == "viewer":
-        table = viewer['Crime_officers']
+        table = viewer['Crime_codes']
     elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Crime_officers']
+        table = employee['Crime_codes']
 
     sql = generateStatementViewer('Crime_codes', 'select', query, table)
     df = runstatement(sql)
@@ -441,10 +441,12 @@ def crime_officers(username):
     else:
         query = None 
         displayMode = 'inline-block'
+
         if session["permission"] == "viewer":
             table = viewer['Crime_officers']
         elif session["permission"] == "employee" or session["permission"] == "host":
             table = employee['Crime_officers']
+
         sql = generateStatementViewer('Crime_officers', 'select', query, table)
         permission = session.get("permission")
         df = runstatement(sql)
@@ -596,6 +598,7 @@ def criminals(username):
             table = viewer['Criminals']
         elif session["permission"] == "employee" or session["permission"] == "host":
             table = employee['Criminals']
+            
         sql = generateStatementViewer('Criminals', 'select', query, table)
         permission = session.get("permission")
         df = runstatement(sql)
