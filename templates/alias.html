@@ -208,6 +208,7 @@
         {{ data | safe }}
         <!-- Render the table data here -->
       </div>
+
       <div
         class="Insert"
         style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};
@@ -260,9 +261,10 @@
         <form>
         <div id="textbox-container" >
           <textarea id="textbox" name="textbox" placeholder="Enter SQL commands here..." rows="4" style="width: 400px;height: 200px;"></textarea>
-          <button id="submit-btn" type="submit" name="action" value="EnterCommand">Submit</button>
+          <button id="submit-btn" type="submit" name="action" value="EnterCommand" style="display: block;">Submit</button>
       </div>
       </form>
+      </div>
     </div>
       
 

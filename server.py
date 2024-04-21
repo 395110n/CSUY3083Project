@@ -189,21 +189,40 @@ def alias(username):
 @app.route("/<username>/alias/filter", methods=['GET'])
     
     
-@app.route("/<username>/appeals")
+@app.route("/<username>/appeals", methods=['GET', 'POST'])
 def appeals(username):
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
+    if request.method == 'POST' and session.get("permission") == 'host':
+        appeal_id = request.form.getlist('appeal_id[]')
+        crime_id = request.form.getlist('crime_id[]')
+        filing_date = request.form.getlist('filing_date[]')
+        hearing_date = request.form.getlist('hearing_date[]')
+        status = request.form.getlist('status[]')
+        sql = f'''INSERT INTO Appeals (Appeal_ID, Crime_ID, Filing_date, Hearing_date, Status) VALUES'''
+        for ind in range(len(appeal_id)):
+            if ind == len(appeal_id) - 1:
+                sql += f"({appeal_id[ind]}, {crime_id[ind]}, '{filing_date[ind]}', '{hearing_date[ind]}', '{status[ind]}');"
+            else:
+                sql += f"({appeal_id[ind]}, {crime_id[ind]}, '{filing_date[ind]}', '{hearing_date[ind]}', '{status[ind]}'),"
+        try:
+            runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Appeals''')
+            return df.to_html(classes="styled-table", index=False)
+        except:
+            return make_response("Error: Appeal ID already exists or required data is missing.", 400)
+    else:
+        query = None
+        displayMode = 'inline-block'
 
-    if session["permission"] == "viewer":
-        table = viewer['Appeals']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Appeals']
+        if session["permission"] == "viewer":
+            table = viewer['Appeals']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Appeals']
 
-    sql = generateStatementViewer('Appeals', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+        sql = generateStatementViewer('Appeals', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/appeals/filter", methods=['GET'])
 def filter_appeals(username):
@@ -244,21 +263,42 @@ def filter_appeals(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
-@app.route("/<username>/crime_charges")
+@app.route("/<username>/crime_charges", methods = ['GET', 'POST'])
 def crime_charges(username):
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
+    if request.method == 'POST' and session.get("permission") == 'host':
+        charge_id = request.form.getlist('charge_id[]')
+        crime_id = request.form.getlist('crime_id[]')
+        crime_code = request.form.getlist('crime_code[]')
+        charge_status = request.form.getlist('charge_status[]')
+        fine_amount = request.form.getlist('fine_amount[]')
+        court_fee = request.form.getlist('court_fee[]')
+        amount_paid = request.form.getlist('amount_paid[]')
+        pay_due_date = request.form.getlist('pay_due_date[]')
+        sql = f'''INSERT INTO Crime_charges (Charge_ID, Crime_ID, Crime_code, Charge_status, Fine_amount, court_fee, amount_paid, pay_due_date) VALUES'''
+        for ind in range(len(charge_id)):
+            if ind == len(charge_id) - 1:
+                sql += f"({charge_id[ind]},{crime_id[ind]}, {crime_code[ind]}, '{charge_status[ind]}', {fine_amount[ind]}, {court_fee[ind]}, {amount_paid[ind]}, '{pay_due_date[ind]}');"
+            else:
+                sql += f"({charge_id[ind]},{crime_id[ind]}, {crime_code[ind]}, '{charge_status[ind]}', {fine_amount[ind]}, {court_fee[ind]}, {amount_paid[ind]}, '{pay_due_date[ind]}'),"
+        try:
+            runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Crime_charges''')
+            return df.to_html(classes="styled-table", index=False)
+        except Exception as e:
+            return make_response("Error: Crime charge ID already exists or required data is missing.", 400)
+    else:
+        query = None
+        displayMode = 'inline-block'
+        if session["permission"] == "viewer":
+            table = viewer['Crime_charges']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Crime_charges']
 
-    if session["permission"] == "viewer":
-        table = viewer['Crime_charges']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Crime_charges']
-
-    sql = generateStatementViewer('Crime_charges', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+        sql = generateStatementViewer('Crime_charges', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/crime_charges/filter", methods=['GET'])
 def filter_crime_charges(username):
@@ -314,21 +354,37 @@ def filter_crime_charges(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
-@app.route("/<username>/crime_codes")
+@app.route("/<username>/crime_codes", methods = ['Get', 'POST'])
 def crime_codes(username):
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
+    if request.method == 'POST' and session.get("permission") == 'host':
+        crime_code = request.form.getlist('crime_code[]')
+        code_description = request.form.getlist('code_description[]')
+        sql = f'''INSERT INTO Crime_codes (Crime_code, Code_description) VALUES'''
+        for ind in range(len(crime_code)):
+            if ind == len(crime_code) - 1:
+                sql += f"({crime_code[ind]}, '{code_description[ind]}');"
+            else:
+                sql += f"({crime_code[ind]}, '{code_description[ind]}'),"
+        try:
+            runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Crime_codes''')
+            return df.to_html(classes="styled-table", index=False)
+        except:
+            return make_response("Error: Crime code already exists or required data is missing.", 400)
+    else:
+        query = None
+        displayMode = 'inline-block'
 
-    if session["permission"] == "viewer":
-        table = viewer['Crime_codes']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Crime_codes']
-        
-    sql = generateStatementViewer('Crime_codes', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("crime_codes.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+        if session["permission"] == "viewer":
+            table = viewer['Crime_codes']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Crime_codes']
+            
+        sql = generateStatementViewer('Crime_codes', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("crime_codes.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/crime_codes/filter", methods=['GET'])
 def filter_crime_codes(username):
@@ -354,21 +410,35 @@ def filter_crime_codes(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
-@app.route("/<username>/crime_officers")
+@app.route("/<username>/crime_officers", methods= ['GET', 'POST'])
 def crime_officers(username):
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
-
-    if session["permission"] == "viewer":
-        table = viewer['Crime_officers']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Crime_officers']
-
-    sql = generateStatementViewer('Crime_officers', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("crime_officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+    if request.method == 'POST' and session.get("permission") == 'host':
+        crime_id = request.form.getlist('crime_id[]')
+        officer_id = request.form.getlist('officer_id[]')
+        sql = f'''INSERT INTO Crime_officers (Crime_ID, Officer_ID) VALUES'''
+        for ind in range(len(crime_id)):
+            if ind == len(crime_id) - 1:
+                sql += f"({crime_id[ind]}, {officer_id[ind]});"
+            else:
+                sql += f"({crime_id[ind]}, {officer_id[ind]}),"
+        try:
+            runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Crime_officers''')
+            return df.to_html(classes="styled-table", index=False)
+        except:
+            return make_response("Error: Crime ID or Officer ID already exists or required data is missing.", 400)
+    else:
+        query = None 
+        displayMode = 'inline-block'
+        if session["permission"] == "viewer":
+            table = viewer['Crime_officers']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Crime_officers']
+        sql = generateStatementViewer('Crime_officers', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("crime_officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/crime_officers/filter", methods=['GET'])
 def filter_crime_officers(username):
@@ -394,21 +464,43 @@ def filter_crime_officers(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
-@app.route("/<username>/crimes")
+@app.route("/<username>/crimes", methods=['GET', 'POST'])
 def crimes(username):
+
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
+    if request.method == 'POST' and session.get("permission") == 'host':
+        crime_id = request.form.getlist('crime_id[]')
+        criminal_id = request.form.getlist('criminal_id[]')
+        classification = request.form.getlist('classification[]')
+        date_charged = request.form.getlist('date_charged[]')
+        status = request.form.getlist('status[]')
+        hearing_date = request.form.getlist('hearing_date[]')
+        appeal_cut_date = request.form.getlist('appeal_cut_date[]')
+        sql = f'''INSERT INTO Crimes (Crime_ID, Criminal_ID, Classification, Date_charged, Status, Hearing_date, Appeal_cut_date) VALUES'''
+        for ind in range(len(crime_id)):
+            if ind == len(crime_id) - 1:
+                sql += f"({crime_id[ind]}, {criminal_id[ind]}, '{classification[ind]}', '{date_charged[ind]}', '{status[ind]}', '{hearing_date[ind]}', '{appeal_cut_date[ind]}');"
+            else:
+                sql += f"({crime_id[ind]}, {criminal_id[ind]}, '{classification[ind]}', '{date_charged[ind]}', '{status[ind]}', '{hearing_date[ind]}', '{appeal_cut_date[ind]}'),"
+        try:
+            runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Crimes''')
+            return df.to_html(classes="styled-table", index=False)
+        except:
+            return make_response("Error: Crime ID already exists or required data is missing.", 400)
+    else:
+        query = None
+        displayMode = 'inline-block'
 
-    if session["permission"] == "viewer":
-        table = viewer['Crimes']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Crimes']
+        if session["permission"] == "viewer":
+            table = viewer['Crimes']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Crimes']
 
-    sql = generateStatementViewer('Crimes', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("crimes.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+        sql = generateStatementViewer('Crimes', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("crimes.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/crimes/filter", methods=['GET'])
 def filter_crimes(username):
@@ -459,21 +551,45 @@ def filter_crimes(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
-@app.route("/<username>/criminals")
+@app.route("/<username>/criminals", methods = ['GET', 'POST'])
 def criminals(username):
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
+    if request.method == 'POST' and session.get("permission") == 'host':
+        criminal_id = request.form.getlist('criminal_id[]')
+        lastName = request.form.getlist('LastName[]')
+        firstName = request.form.getlist('FirstName[]')
+        street = request.form.getlist('Street[]')
+        city = request.form.getlist('City[]')
+        state = request.form.getlist('State[]')
+        zip = request.form.getlist('Zip[]')
+        phone = request.form.getlist('Phone[]')
+        v_status = request.form.getlist('V_Status[]')
+        p_status = request.form.getlist('P_Status[]')
+        sql = f'''INSERT INTO Criminals (Criminal_ID, LastName, FirstName, Street, City, State, Zip, Phone, V_status, P_status) VALUES'''
+        for ind in range(len(criminal_id)):
+            if ind == len(criminal_id) - 1:
+                sql += f"({criminal_id[ind]}, '{lastName[ind]}', '{firstName[ind]}', '{street[ind]}', '{city[ind]}', '{state[ind]}', '{zip[ind]}', '{phone[ind]}', '{v_status[ind]}', '{p_status[ind]}');"
+            else:
+                sql += f"({criminal_id[ind]}, '{lastName[ind]}', '{firstName[ind]}', '{street[ind]}', '{city[ind]}', '{state[ind]}', '{zip[ind]}', '{phone[ind]}', '{v_status[ind]}', '{p_status[ind]}'),"
+        try:
+            runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Criminals''')
+            return df.to_html(classes="styled-table", index=False)
+        except:
+            return make_response("Error: Criminal ID already exists or required data is missing.", 400)
 
-    if session["permission"] == "viewer":
-        table = viewer['Criminals']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Criminals']
+    else:
+        query = None
+        displayMode = 'inline-block'
 
-    sql = generateStatementViewer('Criminals', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("criminals.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+        if session["permission"] == "viewer":
+            table = viewer['Criminals']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Criminals']
+        sql = generateStatementViewer('Criminals', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("criminals.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/criminals/filter", methods=['GET'])
 def filter_criminals(username):
@@ -549,21 +665,45 @@ def filter_criminals(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
-@app.route("/<username>/prob_officers")
+@app.route("/<username>/prob_officers" , methods = ['GET', 'POST'])
 def prob_officers(username):
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
+    if request.method == 'POST' and session.get("permission") == 'host':
+        prob_id = request.form.getlist('prob_id[]')
+        lastName = request.form.getlist('lastName[]')
+        firstName = request.form.getlist('firstName[]')
+        street = request.form.getlist('street[]')
+        city = request.form.getlist('city[]')
+        state = request.form.getlist('state[]')
+        zip = request.form.getlist('zip[]')
+        phone = request.form.getlist('phone[]')
+        email = request.form.getlist('email[]')
+        status = request.form.getlist('status[]')
+        sql = f'''INSERT INTO Prob_officers (Prob_ID, LastName, FirstName, Street, City, State, Zip, Phone, Email, Status) VALUES'''
+        for ind in range(len(prob_id)):
+            if ind == len(prob_id) - 1:
+                sql += f"({prob_id[ind]}, '{lastName[ind]}', '{firstName[ind]}', '{street[ind]}', '{city[ind]}', '{state[ind]}', '{zip[ind]}', '{phone[ind]}', '{email[ind]}', '{status[ind]}');"
+            else:
+                sql += f"({prob_id[ind]}, '{lastName[ind]}', '{firstName[ind]}', '{street[ind]}', '{city[ind]}', '{state[ind]}', '{zip[ind]}', '{phone[ind]}', '{email[ind]}', '{status[ind]}'),"
+        try:
+            runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Prob_officers''')
+            return df.to_html(classes="styled-table", index=False)
+        except:
+            return make_response("Error: Probation officer ID already exists or required data is missing.", 400)
+    else:
+        query = None
+        displayMode = 'inline-block'
 
-    if session["permission"] == "viewer":
-        table = viewer['Prob_officers']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Prob_officers']
+        if session["permission"] == "viewer":
+            table = viewer['Prob_officers']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Prob_officers']
 
-    sql = generateStatementViewer('Prob_officers', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("prob_officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+        sql = generateStatementViewer('Prob_officers', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("prob_officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/prob_officers/filter", methods=['GET'])
 def filter_prob_officers(username):
@@ -640,21 +780,44 @@ def filter_prob_officers(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
-@app.route("/<username>/officers")
+@app.route("/<username>/officers", methods = ['GET', 'POST'])
 def officers(username):
+
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
 
-    if session["permission"] == "viewer":
-        table = viewer['Officers']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Officers']
+    if request.method == 'POST' and session.get("permission") == 'host':
+        officer_id = request.form.getlist('officer_id[]')
+        lastName = request.form.getlist('last_name[]')
+        firstName = request.form.getlist('first_name[]')
+        precinct = request.form.getlist('precinct[]')
+        badge = request.form.getlist('badge[]')
+        phone = request.form.getlist('phone[]')
+        status = request.form.getlist('status[]')
+        sql = f'''INSERT INTO Officers (Officer_ID, LastName, FirstName, Precinct, Badge, Phone, Status) VALUES'''
+        for ind in range(len(officer_id)):
+            if ind == len(officer_id) - 1:
+                sql += f"({officer_id[ind]}, '{lastName[ind]}', '{firstName[ind]}', '{precinct[ind]}', '{badge[ind]}', '{phone[ind]}', '{status[ind]}');"
+            else:
+                sql += f"({officer_id[ind]}, '{lastName[ind]}', '{firstName[ind]}', '{precinct[ind]}', '{badge[ind]}', '{phone[ind]}', '{status[ind]}'),"
+        try:
+            runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Officers''')
+            return df.to_html(classes="styled-table", index=False)
+        except:
+            return make_response("Error: Officer ID already exists or required data is missing.", 400)
+    else:
+        query = None
+        displayMode = 'inline-block'
 
-    sql = generateStatementViewer('Officers', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+        if session["permission"] == "viewer":
+            table = viewer['Officers']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Officers']
+
+        sql = generateStatementViewer('Officers', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/officers/filter", methods=['GET'])
 def filter_officers(username):
@@ -711,21 +874,42 @@ def filter_officers(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
-@app.route("/<username>/sentences")
+@app.route("/<username>/sentences", methods= ['GET','POST'])
 def sentences(username):
     runstatement('''use Criminal_Records''', commit=True)
-    query = None
-    displayMode = 'inline-block'
+    if request.method == 'POST' and session.get("permission") == 'host':
+        sentence_id = request.form.getlist('sentence_id[]')
+        criminal_id = request.form.getlist('criminal_id[]')
+        type = request.form.getlist('type[]')
+        prob_id = request.form.getlist('prob_id[]')
+        start_date = request.form.getlist('start_date[]')
+        end_date = request.form.getlist('end_date[]')
+        violations = request.form.getlist('violations[]')
+        sql = f'''INSERT INTO Sentences (Sentence_ID, Criminal_ID, Type, Prob_ID, Start_date, End_date, Violations) VALUES'''
+        for ind in range(len(sentence_id)):
+            if ind == len(sentence_id) - 1:
+                sql += f"({sentence_id[ind]}, {criminal_id[ind]}, '{type[ind]}', {prob_id[ind]}, '{start_date[ind]}', '{end_date[ind]}', '{violations[ind]}');"
+            else:
+                sql += f"({sentence_id[ind]}, {criminal_id[ind]}, '{type[ind]}', {prob_id[ind]}, '{start_date[ind]}', '{end_date[ind]}', '{violations[ind]}'),"
+        try:
+            runstatement(sql, commit=True)
+            df = runstatement('''SELECT * FROM Sentences''')
+            return df.to_html(classes="styled-table", index=False)
+        except:
+                return make_response("Error: Sentence ID already exists or required data is missing.", 400)
+    else:
+        query = None
+        displayMode = 'inline-block'
 
-    if session["permission"] == "viewer":
-        table = viewer['Sentences']
-    elif session["permission"] == "employee" or session["permission"] == "host":
-        table = employee['Sentences']
+        if session["permission"] == "viewer":
+            table = viewer['Sentences']
+        elif session["permission"] == "employee" or session["permission"] == "host":
+            table = employee['Sentences']
 
-    sql = generateStatementViewer('Sentences', 'select', query, table)
-    permission = session.get("permission")
-    df = runstatement(sql)
-    return render_template("sentences.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+        sql = generateStatementViewer('Sentences', 'select', query, table)
+        permission = session.get("permission")
+        df = runstatement(sql)
+        return render_template("sentences.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
 
 @app.route("/<username>/sentences/filter", methods=['GET'])
 def filter_sentences(username):

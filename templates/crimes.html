@@ -63,6 +63,14 @@
           "{{ url_for('crimes', username=session['username']) }}";
       }
     </script>
+
+    <style>
+      #insert-form input {
+        width : 80px;
+        height: 20px;
+        margin-right : 10px;
+      }
+    </style>
   </head>
   <body>
     <!-- Sidebar navigation -->
@@ -233,11 +241,157 @@
         </div>
       </div>
 
-      <div class="scrollable-table">
+      <div class="scrollable-table" id="table-container">
         {{ data | safe }}
         <!-- Render the table data here -->
       </div>
+
+      <div
+      class="Insert"
+      style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};
+      margin-top: 30px; width: 800px; "
+    >
+      <h2 style="font-size: 30px;">Insert Crimes</h2>
+      <form id="insert-form">
+        <div
+          id="insert-form-div"
+          style=" max-height: 200px; overflow-y: scroll"
+        >
+          <button id="addRows" type="button" onclick="insertRow()">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <button id="deleteRows" type="button" onclick="deleteRow()">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <br />
+          <br />
+          <div style="width: 100%">
+            <label for="crime_id0">Crime ID</label>
+            <input
+              type="text"
+              id="crime_id0"
+              name="crime_id[]" />
+            <label for="criminal_id0">Criminal ID</label>
+            <input
+              type="text"
+              id="criminal_id0"
+              name="criminal_id[]" />
+            <label for="classification0">Classification</label>
+            <input
+              type="text"
+              id="classification0"
+              name="classification[]" />
+            <label for="date_charged0">Date Charged</label>
+            <input
+              type="text"
+              id="date_charged0"
+              name="date_charged[]" />
+            <label for="status0">Status</label>
+            <input
+              type="text"
+              id="status0"
+              name="status[]" />
+            <label for="hearing_date0">Hearing Date</label>
+            <input
+              type="text"
+              id="hearing_date0"
+              name="hearing_date[]" />
+            <label for="appeal_cut_date0">Appeal Cut Date</label>
+            <input
+              type="text"
+              id="appeal_cut_date0"
+              name="appeal_cut_date[]" />
+            <br />
+            <br />
+          </div>
+        </div>
+        <div id="error_message" style=" font-size: small; display: inline-block; clear: both;"></div>
+        <button
+          id="insertButton"
+          type="submit"
+          onclick="submitForm()"
+          style="margin-left:80%; display: inline-block;"
+        >
+          Insert
+        </button>
+      </form>
+     </div>
+
+
+    <div style="display: inline-block; margin: 70px; position:fixed; right: 20px; ">
+      <form>
+      <div id="textbox-container" >
+        <textarea id="textbox" name="textbox" placeholder="Enter SQL commands here..." rows="4" style="width: 400px;height: 200px;"></textarea>
+        <button id="submit-btn" type="submit" name="action" value="EnterCommand" style="display: block;">Submit</button>
+    </div>
+    </form>
+    </div>
     </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+
+
+    <script>
+      var count = 1;
+      function insertRow() {
+        var newdiv = document.createElement("div");
+        newdiv.style = "width: 100%;";
+        newdiv.innerHTML = ` 
+          <label for="crime_id${count}">Crime ID</label>
+          <input type="text" id="crime_id${count}" name="crime_id[]" />
+          <label for="criminal_id${count}">Criminal ID</label>
+          <input type="text" id="criminal_id${count}" name="criminal_id[]" />
+          <label for="classification${count}">Classification</label>
+          <input type="text" id="classification${count}" name="classification[]" />
+          <label for="date_charged${count}">Date Charged</label>
+          <input type="text" id="date_charged${count}" name="date_charged[]" />
+          <label for="status${count}">Status</label>
+          <input type="text" id="status${count}" name="status[]" />
+          <label for="hearing_date${count}">Hearing Date</label>
+          <input type="text" id="hearing_date${count}" name="hearing_date[]" />
+          <label for="appeal_cut_date${count}">Appeal Cut Date</label>
+          <input type="text" id="appeal_cut_date${count}" name="appeal_cut_date[]" />
+          <br />
+          <br />
+         `;
+        document.getElementById("insert-form-div").appendChild(newdiv);
+        count++;
+      }
+      function deleteRow() {
+        var lastDivChild = document.querySelector(
+          "#insert-form-div > div:last-child"
+        );
+        // it is id selector, so it will only select the last child of the div
+        if (count > 1) {
+          document.getElementById("insert-form-div").removeChild(lastDivChild);
+          count--;
+        }
+      }
+      function submitForm() {
+        event.preventDefault();
+        //prevent reload my page
+        var form = document.getElementById("insert-form");
+        var formData = new FormData(form);
+        //asynchronous request to the server, it will not reload the page
+        var xhr = new XMLHttpRequest();
+        xhr.open(
+          "POST",
+          "{{ url_for('crimes', username=session['username']) }}",
+          true
+        );
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            document.getElementById("table-container").innerHTML =xhr.responseText;
+            document.getElementById("insert-form").reset();
+            //clear the form after insert successfully
+          } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            var error_message = document.getElementById("error_message");
+            if (error_message != null) {
+              error_message.innerHTML = xhr.responseText;
+            }
+          }
+        };
+        xhr.send(formData);
+      }
+    </script>
   </body>
 </html>

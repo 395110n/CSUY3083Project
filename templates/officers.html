@@ -63,6 +63,13 @@
           "{{ url_for('officers', username=session['username']) }}";
       }
     </script>
+      <style>
+        #insert-form input {
+          width : 65px;
+          height: 20px;
+          margin-right : 10px;
+        }
+      </style>
   </head>
   <body>
     <!-- Sidebar navigation -->
@@ -235,11 +242,157 @@
         </div>
       </div>
 
-      <div class="scrollable-table">
+      <div class="scrollable-table" id="table-container">
         {{ data | safe }}
         <!-- Render the table data here -->
       </div>
+      <div
+      class="Insert"
+      style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};
+      margin-top: 30px; width: 800px; "
+    >
+      <h2 style="font-size: 30px;">Insert Officers</h2>
+      <form id="insert-form">
+        <div
+          id="insert-form-div"
+          style=" max-height: 200px; overflow-y: scroll"
+        >
+          <button id="addRows" type="button" onclick="insertRow()">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <button id="deleteRows" type="button" onclick="deleteRow()">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <br />
+          <br />
+          <div style="width: 100%">
+            <label for="officer_id0">Officer ID</label>
+            <input
+              type="text"
+              id="officer_id0"
+              name="officer_id[]" />
+            <label for="first_name0">First Name</label>
+            <input
+              type="text"
+              id="first_name0"
+              name="first_name[]" />
+            <label for="last_name0">Last Name</label>
+            <input
+              type="text"
+              id="last_name0"
+              name="last_name[]" />
+            <label for="precinct0">Precinct</label>
+            <input
+              type="text"
+              id="precinct0"
+              name="precinct[]" />
+            <label for="badge0">Badge</label>
+            <input
+              type="text"
+              id="badge0"
+              name="badge[]" />
+            <label for="phone0">Phone</label>
+            <input
+              type="text"
+              id="phone0"
+              name="phone[]" />
+            <lable for="status0">Status</lable>
+            <input
+              type="text"
+              id="status0"
+              name="status[]" />
+            <br />
+            <br />
+          </div>
+        </div>
+        <div id="error_message" style=" font-size: small; display: inline-block; clear: both;"></div>
+        <button
+          id="insertButton"
+          type="submit"
+          onclick="submitForm()"
+          style="margin-left:80%; display: inline-block;"
+        >
+          Insert
+        </button>
+      </form>
+     </div>
+
+
+    <div style="display: inline-block; margin: 70px; position:fixed; right: 20px; ">
+      <form>
+      <div id="textbox-container" >
+        <textarea id="textbox" name="textbox" placeholder="Enter SQL commands here..." rows="4" style="width: 400px;height: 200px;"></textarea>
+        <button id="submit-btn" type="submit" name="action" value="EnterCommand" style="display: block;">Submit</button>
+    </div>
+    </form>
+    </div>
+
     </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+
+    <script>
+      var count = 1;
+      function insertRow() {
+        var newdiv = document.createElement("div");
+        newdiv.style = "width: 100%;";
+        newdiv.innerHTML = ` 
+          <label for="officer_id${count}">Officer ID</label>
+          <input type="text" id="officer_id${count}" name="officer_id[]" />
+          <label for="first_name${count}">First Name</label>
+          <input type="text" id="first_name${count}" name="first_name[]" />
+          <label for="last_name${count}">Last Name</label>
+          <input type="text" id="last_name${count}" name="last_name[]" />
+          <label for="precinct${count}">Precinct</label>
+          <input type="text" id="precinct${count}" name="precinct[]" />
+          <label for="badge${count}">Badge</label>
+          <input type="text" id="badge${count}" name="badge[]" />
+          <label for="phone${count}">Phone</label>
+          <input type="text" id="phone${count}" name="phone[]" />
+          <label for="status${count}">Status</label>
+          <input type="text" id="status${count}" name="status[]" />
+          <br />
+          <br />
+         `;
+        document.getElementById("insert-form-div").appendChild(newdiv);
+        count++;
+      }
+      function deleteRow() {
+        var lastDivChild = document.querySelector(
+          "#insert-form-div > div:last-child"
+        );
+        // it is id selector, so it will only select the last child of the div
+        if (count > 1) {
+          document.getElementById("insert-form-div").removeChild(lastDivChild);
+          count--;
+        }
+      }
+      function submitForm() {
+        event.preventDefault();
+        //prevent reload my page
+        var form = document.getElementById("insert-form");
+        var formData = new FormData(form);
+        //asynchronous request to the server, it will not reload the page
+        var xhr = new XMLHttpRequest();
+        xhr.open(
+          "POST",
+          "{{ url_for('officers', username=session['username']) }}",
+          true
+        );
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            document.getElementById("table-container").innerHTML =xhr.responseText;
+            document.getElementById("insert-form").reset();
+            //clear the form after insert successfully
+          } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            var error_message = document.getElementById("error_message");
+            if (error_message != null) {
+              error_message.innerHTML = xhr.responseText;
+            }
+          }
+        };
+        xhr.send(formData);
+
+      }
+    </script>
   </body>
 </html>
