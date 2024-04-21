@@ -174,7 +174,13 @@ def alias(username):
         except:
             return make_response("Error: Alias ID already exists or required data is missing.", 400)
         # if action == "EnterCommands":
-        #     text = request.form.get('textbox')
+        #     sql = request.form.get('textbox')
+        #     try:
+        #         runstatement(sql, commit=True)
+        #         df = runstatement('''SELECT * FROM Alias''')
+        #         return df.to_html(classes="styled-table", index=False)
+        #     except:
+        #         return make_response("Not Applicable SQL Command", 400)
 
     else:
         query = None
