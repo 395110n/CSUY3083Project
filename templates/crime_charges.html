@@ -34,10 +34,8 @@
       // Function to clear input fields when modal is closed
       $(document).ready(function () {
         $("#filterModal").on("hidden.bs.modal", function () {
-          console.log("Modal hidden event triggered."); // Log event for debugging
           // Clear input fields inside the form with id "filterForm"
           $("#filterForm")[0].reset();
-          console.log("Form reset."); // Log form reset for debugging
         });
       });
 
@@ -64,13 +62,13 @@
       }
     </script>
 
-  <style>
-    #insert-form input {
-      width : 65px;
-      height: 20px;
-      margin-right : 10px;
-    }
-  </style>
+    <style>
+      #insert-form input {
+        width: 65px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    </style>
   </head>
 
   <body>
@@ -113,7 +111,8 @@
     <!-- Main content -->
     <div class="content">
       <h1>Crime Charges</h1>
-      <!-- Add a button to trigger the modal -->
+
+      <!-- Button to trigger the modal -->
       <button
         type="button"
         class="btn btn-primary"
@@ -247,22 +246,18 @@
           </div>
         </div>
       </div>
-      <div class="scrollable-table" id="table-container">
-        {{ data | safe }}
-        <!-- Render the table data here -->
-      </div>
-
+      <div class="scrollable-table" id="table-container">{{ data | safe }}</div>
 
       <div
         class="Insert"
         style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};
         margin-top: 30px; width: 800px; "
       >
-        <h2 style="font-size: 30px;">Insert Crime Charges</h2>
+        <h2 style="font-size: 30px">Insert Crime Charges</h2>
         <form id="insert-form">
           <div
             id="insert-form-div"
-            style=" max-height: 200px; overflow-y: scroll"
+            style="max-height: 200px; overflow-y: scroll"
           >
             <button id="addRows" type="button" onclick="insertRow()">
               <i class="fa-solid fa-plus"></i>
@@ -274,75 +269,98 @@
             <br />
             <div style="width: 100%">
               <label for="charge_id0">Charge ID</label>
-              <input
-                type="text"
-                id="charge_id0"
-                name="charge_id[]" required />
+              <input type="text" id="charge_id0" name="charge_id[]" required />
               <label for="crime_id0">Crime ID</label>
-              <input
-                type="text"
-                id="crime_id0"
-                name="crime_id[]" required />
+              <input type="text" id="crime_id0" name="crime_id[]" required />
               <label for="crime_code0">Crime Code</label>
               <input
                 type="text"
                 id="crime_code0"
-                name="crime_code[]" required />
+                name="crime_code[]"
+                required
+              />
               <label for="charge_status0">Charge Status</label>
               <input
                 type="text"
                 id="charge_status0"
-                name="charge_status[]" required />
-              
+                name="charge_status[]"
+                required
+              />
+
               <label for="fine_amount0">Fine Amount</label>
               <input
                 type="text"
                 id="fine_amount0"
-                name="fine_amount[]" required />
+                name="fine_amount[]"
+                required
+              />
               <label for="court_fee0">Court Fee</label>
-              <input
-                type="text"
-                id="court_fee0"
-                name="court_fee[]" required />
+              <input type="text" id="court_fee0" name="court_fee[]" required />
               <label for="amount_paid0">Amount Paid</label>
               <input
                 type="text"
                 id="amount_paid0"
-                name="amount_paid[]" required />
+                name="amount_paid[]"
+                required
+              />
               <label for="pay_due_date0">Pay Due Date</label>
               <input
                 type="text"
                 id="pay_due_date0"
-                name="pay_due_date[]" required />
+                name="pay_due_date[]"
+                required
+              />
               <br />
               <br />
             </div>
           </div>
-          <div id="error_message" style=" font-size: small; display: inline-block; clear: both;"></div>
+          <div
+            id="error_message"
+            style="font-size: small; display: inline-block; clear: both"
+          ></div>
           <button
             id="insertButton"
             type="submit"
             onclick="submitForm()"
-            style="margin-left:80%; display: inline-block;"
+            style="margin-left: 80%; display: inline-block"
           >
             Insert
           </button>
         </form>
-       </div>
-
-
-      <div style="display: inline-block; margin: 70px; position:fixed; right: 20px; ">
-        <form>
-        <div id="textbox-container" >
-          <textarea id="textbox" name="textbox" placeholder="Enter SQL commands here..." rows="4" style="width: 400px;height: 200px;"></textarea>
-          <button id="submit-btn" type="submit" name="action" value="EnterCommand" style="display: block;">Submit</button>
       </div>
-      </form>
+
+      <div
+        style="
+          display: inline-block;
+          margin: 70px;
+          position: fixed;
+          right: 20px;
+        "
+      >
+        <form>
+          <div id="textbox-container">
+            <textarea
+              id="textbox"
+              name="textbox"
+              placeholder="Enter SQL commands here..."
+              rows="4"
+              style="width: 400px; height: 200px"
+            ></textarea>
+            <button
+              id="submit-btn"
+              type="submit"
+              name="action"
+              value="EnterCommand"
+              style="display: block"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
       </div>
     </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
 
-    
     <script>
       var count = 1;
       function insertRow() {
@@ -393,7 +411,8 @@
         );
         xhr.onreadystatechange = function () {
           if (xhr.readyState === 4 && xhr.status === 200) {
-            document.getElementById("table-container").innerHTML =xhr.responseText;
+            document.getElementById("table-container").innerHTML =
+              xhr.responseText;
             document.getElementById("insert-form").reset();
             //clear the form after insert successfully
           } else if (xhr.readyState === 4 && xhr.status !== 200) {

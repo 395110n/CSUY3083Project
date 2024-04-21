@@ -40,32 +40,6 @@ employee = {
     'Crime_codes': "*"
 }
 
-'''
-viewer previleges: 
-GRANT SELECT ON Alias TO viewer;
-GRANT SELECT (Criminal_ID, FirstName, LastName, V_status, P_status) ON Criminals TO viewer;
-GRANT SELECT ON Crimes TO viewer;
-GRANT SELECT ON Sentences TO viewer;
-GRANT SELECT (Prob_ID, FirstName, LastName, Status) ON Prob_officers TO viewer;
-GRANT SELECT ON Crime_charges TO viewer;
-GRANT SELECT ON Crime_officers TO viewer;
-GRANT SELECT (Officer_ID, FirstName, LastName, Precinct, Badge, Status) ON Officers TO viewer;
-GRANT SELECT ON Appeals TO viewer;
-GRANT SELECT ON Crime_codes TO viewer;
-
-employee previleges:
-GRANT SELECT ON Alias TO employee;
-GRANT SELECT ON Criminals TO employee;
-GRANT SELECT ON Crimes TO employee;
-GRANT SELECT ON Sentences TO employee;
-GRANT SELECT ON Prob_officers TO employee;
-GRANT SELECT ON Crime_charges TO employee;
-GRANT SELECT ON Crime_officers TO employee;
-GRANT SELECT ON Officers TO employee;
-GRANT SELECT ON Appeals TO employee;
-GRANT SELECT ON Crime_codes TO employee;
-'''
-
 def runstatement(statement, commit=False):
     cursor = mysql.connection.cursor()
     cursor.execute(statement)
@@ -202,7 +176,9 @@ def filter_alias(username):
     alias_id = request.args.get('alias_id')
     criminal_id = request.args.get('criminal_id')
     alias = request.args.get('alias')
+
     query = ""
+
     if alias_id:
         query += f"Alias_ID = '{alias_id}'"
     if criminal_id:
@@ -213,10 +189,12 @@ def filter_alias(username):
         if query:
             query += " AND "
         query += f"Alias = '{alias}'"
+
     if session["permission"] == "viewer":
         table = viewer['Alias']
     elif session["permission"] == "employee" or session["permission"] == "host":
         table = employee['Alias']
+        
     sql = generateStatementViewer('Alias', 'select', query, table)
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
@@ -1012,7 +990,6 @@ def change_password():
     
     flash("Password changed successfully.")
     return redirect(url_for('profile', username=username))
-
 
 
 if __name__ == "__main__":

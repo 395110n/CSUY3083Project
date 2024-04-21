@@ -34,10 +34,8 @@
       // Function to clear input fields when modal is closed
       $(document).ready(function () {
         $("#filterModal").on("hidden.bs.modal", function () {
-          console.log("Modal hidden event triggered."); // Log event for debugging
           // Clear input fields inside the form with id "filterForm"
           $("#filterForm")[0].reset();
-          console.log("Form reset."); // Log form reset for debugging
         });
       });
 
@@ -105,7 +103,7 @@
     <div class="content">
       <h1>Crime Officers</h1>
 
-      <!-- Add a button to trigger the modal -->
+      <!-- Button to trigger the modal -->
       <button
         type="button"
         class="btn btn-primary"
@@ -115,7 +113,7 @@
         Filter
       </button>
 
-      <!-- Add a Clear Filter button -->
+      <!-- Clear Filter button -->
       <button type="button" class="btn btn-secondary" onclick="clearFilter()">
         Clear Filter
       </button>
@@ -188,9 +186,7 @@
 
       <div class="scrollable-table" id="table-container">
         {{ data | safe }}
-        <!-- Render the table data here -->
       </div>
-
       
       <div
       class="Insert"
@@ -239,7 +235,6 @@
         </button>
       </form>
      </div>
-
 
     <div style="display: inline-block; margin: 70px; position:fixed; right: 20px; ">
       <form>
