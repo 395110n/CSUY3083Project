@@ -277,25 +277,28 @@
           position: fixed;
         "
       >
-        <form>
-          <div id="textbox-container">
-            <textarea
-              id="textbox"
-              name="textbox"
-              placeholder="Enter SQL commands here..."
-              rows="4"
-              style="width: 400px; height: 200px"
-            ></textarea>
-            <button
-              id="submit-btn"
-              type="submit"
-              name="action"
-              value="EnterCommand"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
+      <form action="{{ url_for('appeals', username=session['username']) }}" method="post">
+        <div id="textbox-container"
+        style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};"
+        >
+          <textarea
+            id="textbox"
+            name="textbox"
+            placeholder="Enter SQL commands here..."
+            rows="4"
+            style="width: 400px; height: 200px"
+          ></textarea>
+          <button
+            id="submit-btn"
+            type="submit"
+            name="action"
+            value="EnterCommand"
+            style="display: block"
+          >
+            Submit
+          </button>
+        </div>
+      </form>    
       </div>
     </div>
 
@@ -342,7 +345,7 @@
         var xhr = new XMLHttpRequest();
         xhr.open(
           "POST",
-          "{{ url_for('appeals', username=session['username']) }}",
+          "{{ url_for('appeals', username=session['username']) }}?action=insert",
           true
         );
         xhr.onreadystatechange = function () {

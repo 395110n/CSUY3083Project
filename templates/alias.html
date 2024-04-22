@@ -247,6 +247,8 @@
           <button
             id="insertButton"
             type="submit"
+            name="action"
+            value="insert"
             onclick="submitForm()"
             style="margin-left: 80%; display: inline-block"
           >
@@ -271,26 +273,28 @@
           right: 100px;
         "
       >
-        <form>
-          <div id="textbox-container">
-            <textarea
-              id="textbox"
-              name="textbox"
-              placeholder="Enter SQL commands here..."
-              rows="4"
-              style="width: 400px; height: 200px"
-            ></textarea>
-            <button
-              id="submit-btn"
-              type="submit"
-              name="action"
-              value="EnterCommand"
-              style="display: block"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
+      <form action="{{ url_for('alias', username=session['username']) }}" method="post">
+        <div id="textbox-container"
+        style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};"
+        >
+          <textarea
+            id="textbox"
+            name="textbox"
+            placeholder="Enter SQL commands here..."
+            rows="4"
+            style="width: 400px; height: 200px"
+          ></textarea>
+          <button
+            id="submit-btn"
+            type="submit"
+            name="action"
+            value="EnterCommand"
+            style="display: block"
+          >
+            Submit
+          </button>
+        </div>
+      </form>      
       </div>
     </div>
 
@@ -332,9 +336,10 @@
         var xhr = new XMLHttpRequest();
         xhr.open(
           "POST",
-          "{{ url_for('alias', username=session['username']) }}",
+          "{{ url_for('alias', username=session['username']) }}?action=insert",
           true
         );
+        
         xhr.onreadystatechange = function () {
           if (xhr.readyState === 4 && xhr.status === 200) {
             document.getElementById("table-container").innerHTML =

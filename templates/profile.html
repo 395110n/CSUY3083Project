@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Profile</title>
+    <title>City Jail Application</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='/css/styles.css') }}"
@@ -18,6 +18,17 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </head>
   <body>
     <!-- Sidebar navigation -->
@@ -43,15 +54,15 @@
       <a href="{{ url_for('officers', username=session['username']) }}"
         >Officers</a
       >
-      <a href="{{ url_for('appeals', username=session['username']) }}"
+      <a
+        href="{{ url_for('appeals', username=session['username']) }}"
         >Appeals</a
       >
       <a href="{{ url_for('crime_codes', username=session['username']) }}"
         >Crime Codes</a
       >
-      <a
-        href="{{ url_for('profile', username=session['username']) }}"
-        class="active"
+      <a href="{{ url_for('profile', username=session['username']) }}"
+      class="active"
         >Profile</a
       >
     </div>
@@ -97,7 +108,62 @@
       </form>
     </div>
 
+    <div class="scrollable-table" 
+    id="table-container" 
+    style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %}; margin-top: 30px; width: 600px; margin-left: 290px; "
+    >{{ data | safe }}
+    </div>
+
+    <div style="display: grid; place-content: center end; position: fixed; right: 20px; top: 55%; transform: translateY(-50%);">
+      <!-- <form action="{{ url_for('profile', username=session['username']) }}" method="post">
+        <div id="textbox-container"
+        style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %}; position: relative;"
+        >
+          <textarea
+            id="textbox"
+            name="textbox"
+            placeholder="Enter SQL commands here..."
+            rows="6"
+            style="width: 400px; height: 400px"
+          ></textarea>
+          <button
+            id="submit-btn"
+            type="submit"
+            name="action"
+            value="EnterCommand"
+            style="display: block"
+          >
+            Submit
+          </button>
+        </div>
+      </form>     -->
+      <form action="{{ url_for('crimes', username=session['username']) }}" method="post">
+        <div id="textbox-container"
+        style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};"
+        >
+          <textarea
+            id="textbox"
+            name="textbox"
+            placeholder="Enter SQL commands here..."
+            rows="4"
+            style="width: 400px; height: 200px"
+          ></textarea>
+          <button
+            id="submit-btn"
+            type="submit"
+            name="action"
+            value="EnterCommand"
+            style="display: block"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+
     <!-- Logout button -->
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+
+    
   </body>
 </html>
