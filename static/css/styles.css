@@ -160,11 +160,10 @@ body {
   height: 200px;
   resize: none; 
   overflow: auto;
-  position: relative; /* 添加相对定位 */
+  position: relative;
 }
 #submit-btn {
-  /* 设置按钮样式 */
   position: absolute;
-  top: -30px; /* 将按钮向上移动 */
-  left: 0; /* 按钮左对齐 */
+  top: -30px; 
+  left: 0; 
 }

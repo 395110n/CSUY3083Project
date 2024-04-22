@@ -89,15 +89,17 @@ def login():
     
     return render_template("login.html", error_message=error_message, logout_message=logout_message)
 
-@app.route("/<username>/profile", methods=['POST'])
+@app.route("/<username>/profile", methods=['GET', 'POST'])
 def profile(username):
     runstatement('''use Usrs''', commit=True)
     df = runstatement('''SELECT usr_ID, firstName, lastName, permission FROM Usrs''')
-    # if request.method == 'POST' and session.get("permission") == 'host':
-    #     sql = request.form.get('textbox')
-    #     df = runstatement('''SELECT usr_ID, firstName, lastName, permission FROM Usrs''')
-
-    #     print(sql)
+    if request.method == 'POST' and session.get("permission") == 'host':
+        try:
+            sql = request.form.get('textbox')
+            runstatement(sql, commit="True")
+            df = runstatement('''SELECT usr_ID, firstName, lastName, permission FROM Usrs''')
+        except:
+            return make_response("Error: Alias ID already exists or required data is missing.", 400)
 
     return render_template("profile.html", 
                     username=username, 
