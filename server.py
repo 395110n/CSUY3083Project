@@ -328,7 +328,6 @@ def crime_charges(username):
                 return make_response("Error: Crime charge ID already exists or required data is missing.", 400)
         else:
             sql = request.form.get('textbox')
-            print(sql)
             try:
                 displayMode = 'inline-block'
                 runstatement(sql, commit=True)
@@ -427,7 +426,6 @@ def crime_codes(username):
                 return make_response("Error: Crime code already exists or required data is missing.", 400)
         else:
             sql = request.form.get('textbox')
-            print(sql)
             try:
                 displayMode = 'inline-block'
                 runstatement(sql, commit=True)
@@ -497,7 +495,6 @@ def crime_officers(username):
                 return make_response("Error: Crime ID or Officer ID already exists or required data is missing.", 400)
         else:
             sql = request.form.get('textbox')
-            print(sql)
             try:
                 displayMode = 'inline-block'
                 runstatement(sql, commit=True)
@@ -573,7 +570,6 @@ def crimes(username):
                 return make_response("Error: Crime ID already exists or required data is missing.", 400)
         else:
             sql = request.form.get('textbox')
-            print(sql)
             try:
                 displayMode = 'inline-block'
                 runstatement(sql, commit=True)
@@ -676,7 +672,6 @@ def criminals(username):
                 return make_response("Error: Criminal ID already exists or required data is missing.", 400)
         else:
             sql = request.form.get('textbox')
-            print(sql)
             try:
                 displayMode = 'inline-block'
                 runstatement(sql, commit=True)
@@ -805,7 +800,6 @@ def prob_officers(username):
                 return make_response("Error: Probation officer ID already exists or required data is missing.", 400)
         else:
             sql = request.form.get('textbox')
-            print(sql)
             try:
                 displayMode = 'inline-block'
                 runstatement(sql, commit=True)
@@ -933,7 +927,6 @@ def officers(username):
                 return make_response("Error: Officer ID already exists or required data is missing.", 400)
         else:
             sql = request.form.get('textbox')
-            print(sql)
             try:
                 displayMode = 'inline-block'
                 runstatement(sql, commit=True)
@@ -1039,7 +1032,6 @@ def sentences(username):
                     return make_response("Error: Sentence ID already exists or required data is missing.", 400)
         else:
             sql = request.form.get('textbox')
-            print(sql)
             try:
                 displayMode = 'inline-block'
                 runstatement(sql, commit=True)

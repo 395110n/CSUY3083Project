@@ -332,8 +332,9 @@
         "
       >
       <form action="{{ url_for('criminals', username=session['username']) }}" method="post">
-        <div class="Insert"
-        style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};">
+        <div id="textbox-container"
+        style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};"
+        >
           <textarea
             id="textbox"
             name="textbox"

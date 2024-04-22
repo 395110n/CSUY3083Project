@@ -341,9 +341,9 @@
         "
       >
       <form action="{{ url_for('prob_officers', username=session['username']) }}" method="post">
-        <div class="Insert"
+        <div id="textbox-container"
         style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};"
-      >
+        >
           <textarea
             id="textbox"
             name="textbox"
