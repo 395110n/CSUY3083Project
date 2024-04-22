@@ -116,26 +116,26 @@ def logout():
 
 @app.route("/registration", methods=['GET', 'POST'])
 def registration():
-    error_message = None  # Initialize error message variable
     if 'username' in session:
-        return redirect(url_for('profile', username=session['username']))
-    if request.method == 'POST':
-        if 'submit' in request.form:
-            df = runstatement(f'''call checkRegister('{request.form['uname']}')''')
-            # if uname not unique, returns firstname, lastname
-            if len(df) == 0:
-                session["firstName"] = request.form['fname']
-                session["lastName"] = request.form['lname']
-                session["username"] = request.form['uname']
-                session["password"] = request.form['pwd']
-                
-                runstatement("use Usrs", commit= True)
-                runstatement(f"""INSERT INTO Usrs (usr_ID, usr_PW, firstName, lastName) VALUES 
-                            ('{session["username"]}', '{session["password"]}', 
-                            '{session["firstName"]}', '{session["lastName"]}')""", commit=True)
-                return redirect(url_for('login', username=session["username"]))
-            else:
-                error_message = f"Username '{request.form['uname']}' already exists. Please choose a different username."  # Set error message
+        return redirect(url_for('profile', username=session["username"]))
+    
+    error_message = None
+    if request.method == 'POST' and 'submit' in request.form:
+        df = runstatement(f'''call checkRegister('{request.form['uname']}')''')
+        if len(df) == 0:
+            session["firstName"] = request.form['fname']
+            session["lastName"] = request.form['lname']
+            session["username"] = request.form['uname']
+            session["password"] = request.form['pwd']
+            session["permission"] = "viewer"
+            runstatement("use Usrs", commit=True)
+            runstatement(f"""INSERT INTO Usrs (usr_ID, usr_PW, firstName, lastName) VALUES 
+                        ('{session["username"]}', '{session["password"]}', 
+                        '{session["firstName"]}', '{session["lastName"]}')""", commit=True)
+            return redirect(url_for('profile', username=session["username"]))
+        else:
+            error_message = f"Username '{request.form['uname']}' already exists. Please choose a different username."
+
     return render_template("registration.html", error_message=error_message)
     
 @app.route("/<username>/alias",methods=['GET', 'POST'])
@@ -1128,4 +1128,4 @@ def change_password():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="10.18.158.36", port= "8080", debug=True)
