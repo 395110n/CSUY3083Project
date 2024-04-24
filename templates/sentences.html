@@ -48,6 +48,7 @@
           success: function (data) {
             $(".scrollable-table").html(data); // Replace existing content with filtered data
             $("#filterModal").modal("hide");
+            var insert = document.querySelector(".Insert");
             if (insert.style.display != "none") {
               var deleteButton = document.getElementById("delete");
               deleteButton.style.display = "inline-block";
