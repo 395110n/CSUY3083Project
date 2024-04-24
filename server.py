@@ -1173,5 +1173,4 @@ def change_password():
 
 
 if __name__ == "__main__":
-    # app.run(host="10.18.158.36", port= "8080", debug=True)
-    app.run(debug=True)
+    app.run(host="10.18.158.36", port= "8080", debug=True)
