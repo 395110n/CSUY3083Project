@@ -31,82 +31,83 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-            // Function to clear input fields when modal is closed
-            $(document).ready(function () {
-              $("#filterModal").on("hidden.bs.modal", function () {
-                // Clear input fields inside the form with id "filterForm"
-                $("#filterForm")[0].reset();
-              });
-            });
+      // Function to clear input fields when modal is closed
+      $(document).ready(function () {
+        $("#filterModal").on("hidden.bs.modal", function () {
+          // Clear input fields inside the form with id "filterForm"
+          $("#filterForm")[0].reset();
+        });
+      });
 
-            // Function to submit filter form
-            function submitFilter() {
-              var form = $("#filterForm").serialize();
-              $.ajax({
-                type: "GET",
-                url: "{{ url_for('filter_alias', username=session['username']) }}",
-                data: form,
-                success: function (data) {
-                  $(".scrollable-table").html(data); // Replace existing content with filtered data
-                  $("#filterModal").modal("hide");
-                  var insert = document.querySelector(".Insert");
-                  //get insert display status
-                  if (insert.style.display != "none") {
-                    var deleteButton = document.getElementById("delete");
-                    deleteButton.style.display = "inline-block";
-                  }
-                },
-                error: function (xhr, status, error) {
-                  console.error("AJAX Error:", error);
-                },
-              });
+      // Function to submit filter form
+      function submitFilter() {
+        var form = $("#filterForm").serialize();
+        $.ajax({
+          type: "GET",
+          url: "{{ url_for('filter_alias', username=session['username']) }}",
+          data: form,
+          success: function (data) {
+            $(".scrollable-table").html(data); // Replace existing content with filtered data
+            $("#filterModal").modal("hide");
+            var insert = document.querySelector(".Insert");
+            //get insert display status
+            if (insert.style.display != "none") {
+              var deleteButton = document.getElementById("delete");
+              deleteButton.style.display = "inline-block";
             }
+          },
+          error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+          },
+        });
+      }
 
-            function clearFilter() {
-              window.location.href =
-                "{{ url_for('alias', username=session['username']) }}";
-            }
+      function clearFilter() {
+        window.location.href =
+          "{{ url_for('alias', username=session['username']) }}";
+      }
 
-            function submitDelete() {
-              var table = document.querySelector(".styled-table");
-              var ids = new FormData();
-              for (var i = 1, row; (row = table.rows[i]); i++) {
-                ids.append("id", row.cells[0].innerHTML);
-              }
+      function submitDelete() {
+        var table = document.querySelector(".styled-table");
+        var ids = new FormData();
+        for (var i = 1, row; (row = table.rows[i]); i++) {
+          ids.append("id", row.cells[0].innerHTML);
+        }
 
-              fetch("{{ url_for('delete_alias', username=session['username']) }}", {
-                method: "POST",
-                body: ids,
-                async: false,
-              })
-                .then((response) => response.text())
-                .then((data) => {
-                  document.getElementById("table-container").innerHTML = data;
-                  var deleteButton = document.getElementById("delete");
-                  deleteButton.style.display = "none";
-                });
-            }
-
-            function submitUpdate() {
-          var updateData = {
-              update_alias_id: document.getElementById('update_alias_id').value,
-              update_criminal_id: document.getElementById('update_criminal_id').value,
-              update_alias: document.getElementById('update_alias').value
-          };
-
-          $.ajax({
-              type: 'POST',
-              url: "{{ url_for('update_alias', username=session['username']) }}",
-              data: updateData,
-              success: function (data) {
-                  // Update the table with the updated data
-                  $(".scrollable-table").html(data);
-                  $('#updateModal').modal('hide');
-              },
-              error: function (xhr, status, error) {
-                  console.error('AJAX Error:', error);
-              }
+        fetch("{{ url_for('delete_alias', username=session['username']) }}", {
+          method: "POST",
+          body: ids,
+          async: false,
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("table-container").innerHTML = data;
+            var deleteButton = document.getElementById("delete");
+            deleteButton.style.display = "none";
           });
+      }
+
+      function submitUpdate() {
+        var updateData = {
+          update_alias_id: document.getElementById("update_alias_id").value,
+          update_criminal_id:
+            document.getElementById("update_criminal_id").value,
+          update_alias: document.getElementById("update_alias").value,
+        };
+
+        $.ajax({
+          type: "POST",
+          url: "{{ url_for('update_alias', username=session['username']) }}",
+          data: updateData,
+          success: function (data) {
+            // Update the table with the updated data
+            $(".scrollable-table").html(data);
+            $("#updateModal").modal("hide");
+          },
+          error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+          },
+        });
       }
     </script>
 
@@ -177,6 +178,7 @@
       </button>
 
       <!-- Update button -->
+      {% if permission == 'host' %}
       <button
         type="button"
         class="btn btn-info"
@@ -185,6 +187,7 @@
       >
         Update
       </button>
+      {% endif %}
 
       <button
         type="button"
