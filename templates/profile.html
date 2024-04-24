@@ -111,6 +111,30 @@
     >{{ data | safe }}
     </div>
 
+        <!-- Change Permission Form -->
+        {% if permission == 'host' %}
+        <div id="changePerm">
+          <form
+            action="{{ url_for('change_permission', username=session['username']) }}"
+            method="post"
+          >
+            <input
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Enter username"
+              required
+            />
+            <select name="permission" id="permission">
+              <option value="viewer">Viewer</option>
+              <option value="employee">Employee</option>
+              <option value="host">Host</option>
+            </select>
+            <button type="submit">Change Permission</button>
+          </form>
+        </div>
+        {% endif %}
+
     <!-- Logout button -->
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
 
