@@ -37,6 +37,10 @@
           // Clear input fields inside the form with id "filterForm"
           $("#filterForm")[0].reset();
         });
+        $("#updateCrimeChargeModal").on("hidden.bs.modal", function () {
+          // Clear input fields inside the form with id "filterForm"
+          $("#updateForm")[0].reset();
+        });
       });
 
       // Function to submit filter form
@@ -60,6 +64,27 @@
           },
         });
       }
+
+      function submitCrimeChargeUpdate() {
+          var updateData = {
+              update_charge_id: document.getElementById("update_charge_id").value,
+              update_charge_status: document.getElementById("update_charge_status").value
+          };
+
+          $.ajax({
+              type: "POST",
+              url: "{{ url_for('update_crime_charges', username=session['username']) }}",
+              data: updateData,
+              success: function (data) {
+                  $(".scrollable-table").html(data);
+                  $("#updateCrimeChargeModal").modal("hide");
+              },
+              error: function (xhr, status, error) {
+                  console.error("AJAX Error:", error);
+              }
+          });
+      }
+
 
       function clearFilter() {
         window.location.href =
@@ -155,6 +180,18 @@
       <button type="button" onclick="submitDelete()" class="btn btn-secondary" id="delete" style="display: none;">
         Delete
       </button>
+
+      <!-- Update button -->
+      {% if permission == 'host' %}
+      <button
+        type="button"
+        class="btn btn-info"
+        data-toggle="modal"
+        data-target="#updateCrimeChargeModal"
+      >
+        Update
+      </button>
+      {% endif %}
 
       <!-- Modal -->
       <div
@@ -358,6 +395,37 @@
         </form>
       </div>
     </div>
+
+    <!-- Update Crime Charge Modal -->
+<div class="modal fade" id="updateCrimeChargeModal" tabindex="-1" role="dialog" aria-labelledby="updateCrimeChargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateCrimeChargeModalLabel">Update Crime Charge</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="updateCrimeChargeForm">
+          <div class="form-group">
+            <label for="update_charge_id">Charge ID:</label>
+            <input type="text" class="form-control" id="update_charge_id" name="update_charge_id" required />
+          </div>
+          <div class="form-group">
+            <label for="update_charge_status">Charge Status:</label>
+            <input type="text" class="form-control" id="update_charge_status" name="update_charge_status" required />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitCrimeChargeUpdate()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
 
     <script>

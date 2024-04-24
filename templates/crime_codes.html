@@ -37,7 +37,12 @@
           // Clear input fields inside the form with id "filterForm"
           $("#filterForm")[0].reset();
         });
+        $("#updateCrimeCodeModal").on("hidden.bs.modal", function () {
+          // Clear input fields inside the form with id "filterForm"
+          $("#updateForm")[0].reset();
+        });
       });
+
 
       // Function to submit filter form
       function submitFilter() {
@@ -60,6 +65,27 @@
           },
         });
       }
+
+      function submitCrimeCodeUpdate() {
+        var updateData = {
+            update_code_id: document.getElementById("update_code_id").value,
+            update_crime_description: document.getElementById("update_crime_description").value
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('update_crime_codes', username=session['username']) }}",
+            data: updateData,
+            success: function (data) {
+                $(".scrollable-table").html(data);
+                $("#updateCrimeCodeModal").modal("hide");
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", error);
+            }
+        });
+    }
+
 
       function clearFilter() {
         window.location.href =
@@ -148,6 +174,18 @@
         Delete
       </button>
 
+      <!-- Update button -->
+      {% if permission == 'host' %}
+      <button
+        type="button"
+        class="btn btn-info"
+        data-toggle="modal"
+        data-target="#updateCrimeCodeModal"
+      >
+        Update
+      </button>
+      {% endif %}
+
       <!-- Modal -->
       <div
         class="modal fade"
@@ -213,6 +251,37 @@
           </div>
         </div>
       </div>
+
+      <!-- Update Crime Code Modal -->
+<div class="modal fade" id="updateCrimeCodeModal" tabindex="-1" role="dialog" aria-labelledby="updateCrimeCodeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateCrimeCodeModalLabel">Update Crime Code</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="updateCrimeCodeForm">
+          <div class="form-group">
+            <label for="update_code_id">Code ID:</label>
+            <input type="text" class="form-control" id="update_code_id" name="update_code_id" required />
+          </div>
+          <div class="form-group">
+            <label for="update_crime_description">Crime Description:</label>
+            <input type="text" class="form-control" id="update_crime_description" name="update_crime_description" required />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitCrimeCodeUpdate()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       <div class="scrollable-table" id="table-container">{{ data | safe }}</div>
 

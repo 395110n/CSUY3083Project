@@ -346,7 +346,7 @@ def update_appeals(username):
         # Return the updated data
         df = runstatement('''SELECT * FROM Appeals''')
         return df.to_html(classes="styled-table", index=False)
-
+    
 @app.route("/<username>/crime_charges", methods = ['GET', 'POST'])
 def crime_charges(username):
     runstatement('''use Criminal_Records''', commit=True)
@@ -451,6 +451,21 @@ def filter_crime_charges(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
+@app.route("/<username>/crime_charges/update", methods=['POST'])
+def update_crime_charges(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        update_charge_id = request.form.get('update_charge_id')
+        update_charge_status = request.form.get('update_charge_status')
+
+        if update_charge_id:
+            if update_charge_status:
+                runstatement(f'''UPDATE Crime_charges SET Charge_status = '{update_charge_status}' WHERE Charge_ID = {update_charge_id}''', commit=True)
+
+        # Return the updated data
+        df = runstatement('''SELECT * FROM Crime_charges''')
+        return df.to_html(classes="styled-table", index=False)
+
 @app.route("/<username>/crime_codes", methods = ['Get', 'POST'])
 def crime_codes(username):
     runstatement('''use Criminal_Records''', commit=True)
@@ -519,6 +534,22 @@ def filter_crime_codes(username):
     sql = generateStatementViewer('Crime_codes', 'select', query, table)
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
+
+@app.route("/<username>/crime_codes/update", methods=['POST'])
+def update_crime_codes(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        update_code_id = request.form.get('update_code_id')
+        update_description = request.form.get('update_crime_description')
+        print(update_code_id, update_description)
+
+        if update_code_id:
+            if update_description:
+                runstatement(f'''UPDATE Crime_codes SET Code_description = '{update_description}' WHERE Crime_code = {update_code_id}''', commit=True)
+
+        # Return the updated data
+        df = runstatement('''SELECT * FROM Crime_codes''')
+        return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/crime_officers", methods= ['GET', 'POST'])
 def crime_officers(username):
@@ -689,6 +720,24 @@ def filter_crimes(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
+@app.route("/<username>/crimes/update", methods=['POST'])
+def update_crimes(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        update_crime_id = request.form.get('update_crime_id')
+        update_classification = request.form.get('update_classification')
+        update_status = request.form.get("update_status")
+
+        if update_crime_id:
+            if update_classification:
+                runstatement(f'''UPDATE Crimes SET Classification = '{update_classification}' WHERE Crime_ID = {update_crime_id}''', commit=True)
+            if update_classification:
+                runstatement(f'''UPDATE Crimes SET Status = '{update_status}' WHERE Crime_ID = {update_crime_id}''', commit=True)
+
+        # Return the updated data
+        df = runstatement('''SELECT * FROM Crimes''')
+        return df.to_html(classes="styled-table", index=False)
+
 @app.route("/<username>/criminals", methods = ['GET', 'POST'])
 def criminals(username):
     runstatement('''use Criminal_Records''', commit=True)
@@ -815,6 +864,23 @@ def filter_criminals(username):
     sql = generateStatementViewer('Criminals', 'select', query, table)
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
+
+@app.route("/<username>/criminals/update", methods=['POST'])
+def update_criminals(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        update_criminal_id = request.form.get('update_criminal_id')
+        update_v_status = request.form.get('update_v_status')
+        update_p_status = request.form.get('update_p_status')
+
+        if update_criminal_id:
+            if update_v_status:
+                runstatement(f'''UPDATE Criminals SET V_status = '{update_v_status}' WHERE Criminal_ID = {update_criminal_id}''', commit=True)
+            if update_p_status:
+                runstatement(f'''UPDATE Criminals SET P_status = '{update_p_status}' WHERE Criminal_ID = {update_criminal_id}''', commit=True)
+
+        df = runstatement('''SELECT * FROM Criminals''')
+        return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/prob_officers" , methods = ['GET', 'POST'])
 def prob_officers(username):
@@ -944,6 +1010,23 @@ def filter_prob_officers(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
+@app.route("/<username>/prob_officers/update", methods=['POST'])
+def update_prob_officers(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        update_officer_id = request.form.get('update_officer_id')
+        update_status = request.form.get('update_status')
+        print(update_status, update_officer_id)
+
+        if update_officer_id:
+            if update_status:
+                runstatement(f'''UPDATE Prob_officers SET Status = '{update_status}' WHERE Prob_ID = {update_officer_id}''', commit=True)
+
+        # Return the updated data
+        df = runstatement('''SELECT * FROM Prob_officers''')
+        print(df)
+        return df.to_html(classes="styled-table", index=False)
+
 @app.route("/<username>/officers", methods = ['GET', 'POST'])
 def officers(username):
 
@@ -1051,6 +1134,21 @@ def filter_officers(username):
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
 
+@app.route("/<username>/officers/update", methods=['POST'])
+def update_officers(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        update_officer_id = request.form.get('update_officer_id')
+        update_status = request.form.get('update_status')
+
+        if update_officer_id:
+            if update_status:
+                runstatement(f'''UPDATE Officers SET Status = '{update_status}' WHERE Officer_ID = {update_officer_id}''', commit=True)
+
+        # Return the updated data
+        df = runstatement('''SELECT * FROM Officers''')
+        return df.to_html(classes="styled-table", index=False)
+
 @app.route("/<username>/sentences", methods= ['GET','POST'])
 def sentences(username):
     runstatement('''use Criminal_Records''', commit=True)
@@ -1149,6 +1247,21 @@ def filter_sentences(username):
     sql = generateStatementViewer('Sentences', 'select', query, table)
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
+
+@app.route("/<username>/sentences/update", methods=['POST'])
+def update_sentences(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        update_sentence_id = request.form.get('update_sentence_id')
+        update_sentence_type = request.form.get('update_type')
+
+        if update_sentence_id:
+            if update_sentence_type:
+                runstatement(f'''UPDATE Sentences SET Type = '{update_sentence_type}' WHERE Sentence_ID = {update_sentence_id}''', commit=True)
+
+        # Return the updated data
+        df = runstatement('''SELECT * FROM Sentences''')
+        return df.to_html(classes="styled-table", index=False)
 
 @app.route("/change_password", methods=['POST'])
 def change_password():
