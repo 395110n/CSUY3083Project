@@ -48,8 +48,10 @@
           success: function (data) {
             $(".scrollable-table").html(data); // Replace existing content with filtered data
             $("#filterModal").modal("hide");
-            var deleteButton = document.getElementById("delete");
-            deleteButton.style.display = "inline-block";
+            if (insert.style.display != "none") {
+              var deleteButton = document.getElementById("delete");
+              deleteButton.style.display = "inline-block";
+            }
           },
           error: function (xhr, status, error) {
             console.error("AJAX Error:", error);
