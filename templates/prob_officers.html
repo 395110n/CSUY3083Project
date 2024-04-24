@@ -37,6 +37,10 @@
           // Clear input fields inside the form with id "filterForm"
           $("#filterForm")[0].reset();
         });
+        $("#updateProbOfficerModal").on("hidden.bs.modal", function () {
+          // Clear input fields inside the form with id "filterForm"
+          $("#updateProbOfficerForm")[0].reset();
+        });
       });
 
       // Function to submit filter form
@@ -60,6 +64,27 @@
           },
         });
       }
+
+      function submitProbOfficerUpdate() {
+        var updateData = {
+            update_officer_id: document.getElementById("update_officer_id").value,
+            update_status: document.getElementById("update_status").value
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('update_prob_officers', username=session['username']) }}",
+            data: updateData,
+            success: function (data) {
+                $(".scrollable-table").html(data);
+                $("#updateProbOfficerModal").modal("hide");
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", error);
+            }
+        });
+    }
+
 
       function clearFilter() {
         window.location.href =
@@ -153,6 +178,19 @@
       <button type="button" onclick="submitDelete()" class="btn btn-secondary" id="delete" style="display: none;">
         Delete
       </button>
+
+      <!-- Update button -->
+      {% if permission == 'host' %}
+      <button
+        type="button"
+        class="btn btn-info"
+        data-toggle="modal"
+        data-target="#updateProbOfficerModal"
+      >
+        Update
+      </button>
+      {% endif %}
+
 
       <!-- Modal -->
       <div
@@ -290,6 +328,37 @@
           </div>
         </div>
       </div>
+
+      <!-- Update Prob Officer Modal -->
+<div class="modal fade" id="updateProbOfficerModal" tabindex="-1" role="dialog" aria-labelledby="updateProbOfficerModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateProbOfficerModalLabel">Update Prob Officer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="updateProbOfficerForm">
+          <div class="form-group">
+            <label for="update_officer_id">Officer ID:</label>
+            <input type="text" class="form-control" id="update_officer_id" name="update_officer_id" required />
+          </div>
+          <div class="form-group">
+            <label for="update_status">Status:</label>
+            <input type="text" class="form-control" id="update_status" name="update_status" required />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitProbOfficerUpdate()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       <div class="scrollable-table" id="table-container">{{ data | safe }}</div>
 
