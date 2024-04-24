@@ -10,15 +10,17 @@ end$$
 delimiter ;
 
 -- Trigger in Usrs
-delimiter $$
-create or replace trigger EncodeNewPW
-before update on usrs
-for each row
-begin
-    SET NEW.usr_PW = SHA2(NEW.usr_PW, 256);
-  
-end$$
-delimiter ;
+DELIMITER $$
+CREATE OR REPLACE TRIGGER EncodeNewPW
+BEFORE UPDATE ON usrs
+FOR EACH ROW
+BEGIN
+    -- Check if the usr_PW column is being updated
+    IF NEW.usr_PW IS NOT NULL AND OLD.usr_PW != NEW.usr_PW THEN
+        SET NEW.usr_PW = SHA2(NEW.usr_PW, 256);
+    END IF;
+END$$
+DELIMITER ;
 
 -- Procedure for check Login
 delimiter $$
