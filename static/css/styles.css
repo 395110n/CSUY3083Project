@@ -167,3 +167,8 @@ body {
   top: -30px; 
   left: 0; 
 }
+
+#changePerm {
+  margin-left: 270px;
+  padding: 20px;
+}

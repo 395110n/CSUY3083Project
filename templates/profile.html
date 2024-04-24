@@ -51,15 +51,15 @@
       <a href="{{ url_for('officers', username=session['username']) }}"
         >Officers</a
       >
-      <a
-        href="{{ url_for('appeals', username=session['username']) }}"
+      <a href="{{ url_for('appeals', username=session['username']) }}"
         >Appeals</a
       >
       <a href="{{ url_for('crime_codes', username=session['username']) }}"
         >Crime Codes</a
       >
-      <a href="{{ url_for('profile', username=session['username']) }}"
-      class="active"
+      <a
+        href="{{ url_for('profile', username=session['username']) }}"
+        class="active"
         >Profile</a
       >
     </div>
@@ -105,15 +105,39 @@
       </form>
     </div>
 
-    <div class="scrollable-table" 
-    id="table-container" 
-    style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %}; margin-top: 30px; width: 600px; margin-left: 290px; "
-    >{{ data | safe }}
+    <div
+      class="scrollable-table"
+      id="table-container"
+      style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %}; margin-top: 30px; width: 600px; margin-left: 290px; "
+    >
+      {{ data | safe }}
     </div>
+
+    <!-- Change Permission Form -->
+    {% if permission == 'host' %}
+    <div id="changePerm">
+      <form
+        action="{{ url_for('change_permission', username=session['username']) }}"
+        method="post"
+      >
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="Enter username"
+          required
+        />
+        <select name="permission" id="permission">
+          <option value="viewer">Viewer</option>
+          <option value="employee">Employee</option>
+          <option value="host">Host</option>
+        </select>
+        <button type="submit">Change Permission</button>
+      </form>
+    </div>
+    {% endif %}
 
     <!-- Logout button -->
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
-
-    
   </body>
 </html>
