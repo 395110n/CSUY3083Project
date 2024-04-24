@@ -66,26 +66,45 @@
           "{{ url_for('appeals', username=session['username']) }}";
       }
 
-      function submitDelete(){
+      function submitDelete() {
         var table = document.querySelector(".styled-table");
         var ids = new FormData();
-        for (var i = 1, row; row = table.rows[i]; i++) {
-            ids.append("id", row.cells[0].innerHTML);
+        for (var i = 1, row; (row = table.rows[i]); i++) {
+          ids.append("id", row.cells[0].innerHTML);
         }
 
         fetch("{{ url_for('delete_appeals', username=session['username']) }}", {
           method: "POST",
           body: ids,
-          async: false
+          async: false,
         })
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById("table-container").innerHTML = data;
-          var deleteButton = document.getElementById("delete");
-          deleteButton.style.display = "none";
-        })
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("table-container").innerHTML = data;
+            var deleteButton = document.getElementById("delete");
+            deleteButton.style.display = "none";
+          });
       }
+      function submitUpdate() {
+        var updateData = {
+          update_appeal_id: document.getElementById("update_appeal_id").value,
+          update_status: document.getElementById("update_status").value,
+        };
 
+        $.ajax({
+          type: "POST",
+          url: "{{ url_for('update_appeals', username=session['username']) }}",
+          data: updateData,
+          success: function (data) {
+            // Update the table with the updated data
+            $(".scrollable-table").html(data);
+            $("#updateModal").modal("hide");
+          },
+          error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+          },
+        });
+      }
     </script>
     <style>
       #insert-form input {
@@ -152,7 +171,25 @@
         Clear Filter
       </button>
 
-      <button type="button" onclick="submitDelete()" class="btn btn-secondary" id="delete" style="display: none;">
+      <!-- Update button -->
+      {% if permission == 'host' %}
+      <button
+        type="button"
+        class="btn btn-info"
+        data-toggle="modal"
+        data-target="#updateModal"
+      >
+        Update
+      </button>
+      {% endif %}
+
+      <button
+        type="button"
+        onclick="submitDelete()"
+        class="btn btn-secondary"
+        id="delete"
+        style="display: none"
+      >
         Delete
       </button>
 
@@ -241,6 +278,72 @@
                 type="button"
                 class="btn btn-primary"
                 onclick="submitFilter()"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Update Modal -->
+      <div
+        class="modal fade"
+        id="updateModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="updateModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateModalLabel">Update Appeals</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="updateForm">
+                <div class="form-group">
+                  <label for="update_appeal_id">Appeal ID:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="update_appeal_id"
+                    name="update_appeal_id"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="update_status">Status:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="update_status"
+                    name="update_status"
+                    required
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="submitUpdate()"
               >
                 Submit
               </button>

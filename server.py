@@ -227,7 +227,6 @@ def update_alias(username):
         df = runstatement('''SELECT * FROM Alias''')
         return df.to_html(classes="styled-table", index=False)
 
-    
 @app.route("/<username>/appeals", methods=['GET', 'POST'])
 def appeals(username):
     runstatement('''use Criminal_Records''', commit=True)
@@ -315,6 +314,21 @@ def filter_appeals(username):
     sql = generateStatementViewer('Appeals', 'select', query, table)
     df = runstatement(sql)
     return df.to_html(classes="styled-table", index=False)
+
+@app.route("/<username>/appeals/update", methods=['POST'])
+def update_appeals(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        update_appeal_id = request.form.get('update_appeal_id')
+        update_status = request.form.get('update_status')
+
+        if update_appeal_id:
+            if update_status:
+                runstatement(f'''UPDATE Appeals SET Status = '{update_status}' WHERE Appeal_ID = {update_appeal_id}''', commit=True)
+
+        # Return the updated data
+        df = runstatement('''SELECT * FROM Appeals''')
+        return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/crime_charges", methods = ['GET', 'POST'])
 def crime_charges(username):
