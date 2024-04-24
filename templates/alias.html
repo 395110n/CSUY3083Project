@@ -37,6 +37,10 @@
           // Clear input fields inside the form with id "filterForm"
           $("#filterForm")[0].reset();
         });
+        $("#updateModal").on("hidden.bs.modal", function () {
+          // Clear input fields inside the form with id "filterForm"
+          $("#updateForm")[0].reset();
+        });
       });
 
       // Function to submit filter form
@@ -90,8 +94,6 @@
       function submitUpdate() {
         var updateData = {
           update_alias_id: document.getElementById("update_alias_id").value,
-          update_criminal_id:
-            document.getElementById("update_criminal_id").value,
           update_alias: document.getElementById("update_alias").value,
         };
 
@@ -305,16 +307,6 @@
                     class="form-control"
                     id="update_alias_id"
                     name="update_alias_id"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="update_criminal_id">Criminal ID:</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="update_criminal_id"
-                    name="update_criminal_id"
                     required
                   />
                 </div>

@@ -217,21 +217,17 @@ def update_alias(username):
     runstatement('''use Criminal_Records''', commit=True)
     if session.get("permission") == 'host':
         update_alias_id = request.form.get('update_alias_id')
-        update_criminal_id = request.form.get('update_criminal_id')
         update_alias = request.form.get('update_alias')
 
         if update_alias_id:
-            if update_criminal_id and update_alias:
-                runstatement(f'''UPDATE Alias SET Alias = '{update_alias}', Criminal_ID = {update_criminal_id} WHERE Alias_ID = {update_alias_id}''', commit=True)
-            elif update_criminal_id:
-                runstatement(f'''UPDATE Alias SET Criminal_ID = {update_criminal_id} WHERE Alias_ID = {update_alias_id}''', commit=True)
-            elif update_alias:
+            if update_alias:
                 runstatement(f'''UPDATE Alias SET Alias = '{update_alias}' WHERE Alias_ID = {update_alias_id}''', commit=True)
 
         # Return the updated data
         df = runstatement('''SELECT * FROM Alias''')
         return df.to_html(classes="styled-table", index=False)
 
+    
 @app.route("/<username>/appeals", methods=['GET', 'POST'])
 def appeals(username):
     runstatement('''use Criminal_Records''', commit=True)
