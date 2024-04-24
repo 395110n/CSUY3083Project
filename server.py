@@ -118,7 +118,6 @@ def logout():
 def registration():
     if 'username' in session:
         return redirect(url_for('profile', username=session["username"]))
-    
     error_message = None
     if request.method == 'POST' and 'submit' in request.form:
         df = runstatement(f'''call checkRegister('{request.form['uname']}')''')

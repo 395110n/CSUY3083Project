@@ -322,38 +322,6 @@
           </button>
         </form>
       </div>
-
-      <div
-        style="
-          display: inline-block;
-          margin: 70px;
-          position: fixed;
-          right: 20px;
-        "
-      >
-      <form action="{{ url_for('criminals', username=session['username']) }}" method="post">
-        <div id="textbox-container"
-        style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %};"
-        >
-          <textarea
-            id="textbox"
-            name="textbox"
-            placeholder="Enter SQL commands here..."
-            rows="4"
-            style="width: 400px; height: 200px"
-          ></textarea>
-          <button
-            id="submit-btn"
-            type="submit"
-            name="action"
-            value="EnterCommand"
-            style="display: block"
-          >
-            Submit
-          </button>
-        </div>
-      </form>    
-      </div>
     </div>
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
 
