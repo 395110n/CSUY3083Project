@@ -159,16 +159,7 @@ def alias(username):
             except:
                 return make_response("Error: Alias ID already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                runstatement(sql, commit=True)
-                df = runstatement('''SELECT * FROM Alias''')
-                displayMode = 'inline-block'
-                return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400)            
+            return make_response("Not Applicable move", 400)            
     else:
         query = None
         displayMode = 'inline-block'
@@ -182,6 +173,16 @@ def alias(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("alias.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+    
+@app.route("/<username>/alias/delete", methods=['POST'])
+def delete_alias(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        alias_ids = request.form.getlist('id')
+        for alias_id in alias_ids:
+            runstatement(f'''DELETE FROM Alias WHERE Alias_ID = {alias_id}''', commit=True)
+        df = runstatement('''SELECT * FROM Alias''')
+    return df.to_html(classes="styled-table", index=False)
     
 @app.route("/<username>/alias/filter", methods=['GET'])
 def filter_alias(username):
@@ -202,7 +203,6 @@ def filter_alias(username):
         if query:
             query += " AND "
         query += f"Alias = '{alias}'"
-
     if session["permission"] == "viewer":
         table = viewer['Alias']
     elif session["permission"] == "employee" or session["permission"] == "host":
@@ -236,17 +236,7 @@ def appeals(username):
             except:
                 return make_response("Error: Appeal ID already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                runstatement(sql, commit=True)
-                displayMode = 'inline-block'
-                df = runstatement('''SELECT * FROM Appeals''')
-                displayMode = 'inline-block'
-                return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400) 
+            return make_response("Not Applicable move", 400) 
     else:
         query = None
         displayMode = 'inline-block'
@@ -260,6 +250,16 @@ def appeals(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("appeals.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+    
+@app.route("/<username>/appeals/delete", methods=['POST'])
+def delete_appeals(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        appeal_ids = request.form.getlist('id')
+        for appeal_id in appeal_ids:
+            runstatement(f'''DELETE FROM Appeals WHERE Appeal_ID = {appeal_id}''', commit=True)
+        df = runstatement('''SELECT * FROM Appeals''')
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/appeals/filter", methods=['GET'])
 def filter_appeals(username):
@@ -326,17 +326,7 @@ def crime_charges(username):
             except Exception as e:
                 return make_response("Error: Crime charge ID already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                displayMode = 'inline-block'
-                runstatement(sql, commit=True)
-                df = runstatement('''SELECT * FROM Crime_charges''')
-                displayMode = 'inline-block'
-                return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400) 
+            return make_response("Not Applicable move", 400) 
     else:
         query = None
         displayMode = 'inline-block'
@@ -349,6 +339,16 @@ def crime_charges(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("crime_charges.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+    
+@app.route("/<username>/crime_charges/delete", methods=['POST'])
+def delete_crime_charges(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        charge_ids = request.form.getlist('id')
+        for charge_id in charge_ids:
+            runstatement(f'''DELETE FROM Crime_charges WHERE Charge_ID = {charge_id}''', commit=True)
+        df = runstatement('''SELECT * FROM Crime_charges''')
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/crime_charges/filter", methods=['GET'])
 def filter_crime_charges(username):
@@ -424,17 +424,7 @@ def crime_codes(username):
             except:
                 return make_response("Error: Crime code already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                displayMode = 'inline-block'
-                runstatement(sql, commit=True)
-                df = runstatement('''SELECT * FROM Crime_codes''')
-                displayMode = 'inline-block'
-                return render_template("crime_codes.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400) 
+            return make_response("Not Applicable move", 400) 
     else:
         query = None
         displayMode = 'inline-block'
@@ -448,6 +438,16 @@ def crime_codes(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("crime_codes.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+    
+@app.route("/<username>/crime_codes/delete", methods=['POST'])
+def delete_crime_codes(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        crime_codes = request.form.getlist('id')
+        for crime_code in crime_codes:
+            runstatement(f'''DELETE FROM Crime_codes WHERE Crime_code = {crime_code}''', commit=True)
+        df = runstatement('''SELECT * FROM Crime_codes''')
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/crime_codes/filter", methods=['GET'])
 def filter_crime_codes(username):
@@ -493,17 +493,7 @@ def crime_officers(username):
             except:
                 return make_response("Error: Crime ID or Officer ID already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                displayMode = 'inline-block'
-                runstatement(sql, commit=True)
-                df = runstatement('''SELECT * FROM Crime_officers''')
-                displayMode = 'inline-block'
-                return render_template("crime_officers.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400) 
+           return make_response("Not Applicable move", 400) 
     else:
         query = None 
         displayMode = 'inline-block'
@@ -517,6 +507,17 @@ def crime_officers(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("crime_officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+    
+@app.route("/<username>/crime_officers/delete", methods=['POST'])
+def delete_crime_officers(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        crime_codes = request.form.getlist('id')
+        print(crime_codes)
+        for crime_code in crime_codes:
+            runstatement(f'''DELETE FROM Crime_officers WHERE Crime_ID = {crime_code}''', commit=True)
+        df = runstatement('''SELECT * FROM Crime_officers''')
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/crime_officers/filter", methods=['GET'])
 def filter_crime_officers(username):
@@ -544,7 +545,6 @@ def filter_crime_officers(username):
 
 @app.route("/<username>/crimes", methods=['GET', 'POST'])
 def crimes(username):
-
     runstatement('''use Criminal_Records''', commit=True)
     if request.method == 'POST' and session.get("permission") == 'host':
         if request.args.get("action") == "insert":
@@ -568,17 +568,7 @@ def crimes(username):
             except:
                 return make_response("Error: Crime ID already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                displayMode = 'inline-block'
-                runstatement(sql, commit=True)
-                df = runstatement('''SELECT * FROM Crimes''')
-                displayMode = 'inline-block'
-                return render_template("crimes.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400)
+            return make_response("Not Applicable SQL Command", 400)
     else:
         query = None
         displayMode = 'inline-block'
@@ -592,6 +582,16 @@ def crimes(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("crimes.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+    
+@app.route("/<username>/crimes/delete", methods=['POST'])
+def delete_crimes(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        crime_IDs = request.form.getlist('id')
+        for crime_ID in crime_IDs:
+            runstatement(f'''DELETE FROM Crimes WHERE Crime_ID = {crime_ID}''', commit=True)
+        df = runstatement('''SELECT * FROM Crimes''')
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/crimes/filter", methods=['GET'])
 def filter_crimes(username):
@@ -670,17 +670,7 @@ def criminals(username):
             except:
                 return make_response("Error: Criminal ID already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                displayMode = 'inline-block'
-                runstatement(sql, commit=True)
-                df = runstatement('''SELECT * FROM Criminals''')
-                displayMode = 'inline-block'
-                return render_template("criminals.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400)
+            return make_response("Not Applicable move", 400)
 
     else:
         query = None
@@ -695,11 +685,20 @@ def criminals(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("criminals.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+    
+@app.route("/<username>/criminals/delete", methods=['POST'])
+def delete_criminals(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        criminal_IDs = request.form.getlist('id')
+        for criminal_ID in criminal_IDs:
+            runstatement(f'''DELETE FROM Criminals WHERE Criminal_ID = {criminal_ID}''', commit=True)
+        df = runstatement('''SELECT * FROM Criminals''')
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/criminals/filter", methods=['GET'])
 def filter_criminals(username):
     runstatement('''use Criminal_Records''', commit=True)
-
     criminal_id = None
     street = None
     city = None
@@ -798,17 +797,7 @@ def prob_officers(username):
             except:
                 return make_response("Error: Probation officer ID already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                displayMode = 'inline-block'
-                runstatement(sql, commit=True)
-                df = runstatement('''SELECT * FROM Prob_officers''')
-                displayMode = 'inline-block'
-                return render_template("prob_officers.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400)
+            return make_response("Not Applicable move", 400)
     else:
         query = None
         displayMode = 'inline-block'
@@ -822,6 +811,16 @@ def prob_officers(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("prob_officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+
+@app.route("/<username>/prob_officers/delete", methods=['POST'])
+def delete_prob_officers(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        prob_IDs = request.form.getlist('id')
+        for prob_ID in prob_IDs:
+            runstatement(f'''DELETE FROM Prob_officers WHERE Prob_ID = {prob_ID}''', commit=True)
+        df = runstatement('''SELECT * FROM Prob_officers''')
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/prob_officers/filter", methods=['GET'])
 def filter_prob_officers(username):
@@ -925,17 +924,7 @@ def officers(username):
             except:
                 return make_response("Error: Officer ID already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                displayMode = 'inline-block'
-                runstatement(sql, commit=True)
-                df = runstatement('''SELECT * FROM Officers''')
-                displayMode = 'inline-block'
-                return render_template("officers.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400)
+            return make_response("Not Applicable move", 400)
     else:
         query = None
         displayMode = 'inline-block'
@@ -949,6 +938,16 @@ def officers(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("officers.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+
+@app.route("/<username>/officers/delete", methods=['POST'])
+def delete_officers(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        officer_IDs = request.form.getlist('id')
+        for officer_ID in officer_IDs:
+            runstatement(f'''DELETE FROM Officers WHERE officer_ID = {officer_ID}''', commit=True)
+        df = runstatement('''SELECT * FROM Officers''')
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/officers/filter", methods=['GET'])
 def filter_officers(username):
@@ -1030,17 +1029,7 @@ def sentences(username):
             except:
                     return make_response("Error: Sentence ID already exists or required data is missing.", 400)
         else:
-            sql = request.form.get('textbox')
-            try:
-                displayMode = 'inline-block'
-                runstatement(sql, commit=True)
-                df = runstatement('''SELECT * FROM Sentences''')
-                displayMode = 'inline-block'
-                return render_template("sentences.html", data=df.to_html(classes="styled-table", index=False), 
-                                       displayMode=displayMode,
-                                       permission=session["permission"])
-            except:
-                return make_response("Not Applicable SQL Command", 400)
+            return make_response("Not Applicable move", 400)
     else:
         query = None
         displayMode = 'inline-block'
@@ -1054,6 +1043,16 @@ def sentences(username):
         permission = session.get("permission")
         df = runstatement(sql)
         return render_template("sentences.html", data=df.to_html(classes="styled-table", index=False), displayMode=displayMode,permission=permission)
+    
+@app.route("/<username>/sentences/delete", methods=['POST'])
+def delete_sentences(username):
+    runstatement('''use Criminal_Records''', commit=True)
+    if session.get("permission") == 'host':
+        sentence_IDs = request.form.getlist('id')
+        for sentence_ID in sentence_IDs:
+            runstatement(f'''DELETE FROM Sentences WHERE Sentence_ID = {sentence_ID}''', commit=True)
+        df = runstatement('''SELECT * FROM Sentences''')
+    return df.to_html(classes="styled-table", index=False)
 
 @app.route("/<username>/sentences/filter", methods=['GET'])
 def filter_sentences(username):
@@ -1127,4 +1126,5 @@ def change_password():
 
 
 if __name__ == "__main__":
-    app.run(host="10.18.158.36", port= "8080", debug=True)
+    # app.run(host="10.18.158.36", port= "8080", debug=True)
+    app.run(debug=True)

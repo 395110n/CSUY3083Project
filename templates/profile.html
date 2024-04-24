@@ -111,31 +111,6 @@
     >{{ data | safe }}
     </div>
 
-    <div style="display: grid; place-content: center end; position: fixed; right: 20px; top: 55%; transform: translateY(-50%);">
-      <form action="{{ url_for('profile', username=session['username']) }}" method="post">
-        <div id="textbox-container"
-        style="display:{% if permission != 'host' %}none{% else %}inline-block{% endif %}; position: relative;"
-        >
-          <textarea
-            id="textbox"
-            name="textbox"
-            placeholder="Enter SQL commands here..."
-            rows="6"
-            style="width: 400px; height: 400px"
-          ></textarea>
-          <button
-            id="submit-btn"
-            type="submit"
-            name="action"
-            value="EnterCommand"
-            style="display: block"
-          >
-            Submit
-          </button>
-        </div>
-      </form>    
-    </div>
-
     <!-- Logout button -->
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
 

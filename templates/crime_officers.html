@@ -49,6 +49,8 @@
           success: function (data) {
             $(".scrollable-table").html(data); // Replace existing content with filtered data
             $("#filterModal").modal("hide");
+            var deleteButton = document.getElementById("delete");
+            deleteButton.style.display = "inline-block";
           },
           error: function (xhr, status, error) {
             console.error("AJAX Error:", error);
@@ -59,6 +61,26 @@
       function clearFilter() {
         window.location.href =
           "{{ url_for('crime_officers', username=session['username']) }}";
+      }
+
+      function submitDelete(){
+        var table = document.querySelector(".styled-table");
+        var ids = new FormData();
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            ids.append("id", row.cells[0].innerHTML);
+        }
+
+        fetch("{{ url_for('delete_crime_officers', username=session['username']) }}", {
+          method: "POST",
+          body: ids,
+          async: false
+        })
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("table-container").innerHTML = data;
+          var deleteButton = document.getElementById("delete");
+          deleteButton.style.display = "none";
+        })
       }
     </script>
   </head>
@@ -116,6 +138,10 @@
       <!-- Clear Filter button -->
       <button type="button" class="btn btn-secondary" onclick="clearFilter()">
         Clear Filter
+      </button>
+
+      <button type="button" onclick="submitDelete()" class="btn btn-secondary" id="delete" style="display: none;">
+        Delete
       </button>
 
       <!-- Modal -->
