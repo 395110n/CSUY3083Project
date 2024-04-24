@@ -37,6 +37,10 @@
           // Clear input fields inside the form with id "filterForm"
           $("#filterForm")[0].reset();
         });
+        $("#updateModal").on("hidden.bs.modal", function () {
+          // Clear input fields inside the form with id "filterForm"
+          $("#updateForm")[0].reset();
+        });
       });
 
       // Function to submit filter form
