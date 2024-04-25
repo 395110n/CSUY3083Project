@@ -32,6 +32,6 @@ Project Done and Presented in 04/24/2024
 
 To do a demo:
 1. clone the repo
-2. in the repo, do conda create -f environment.yml
+2. in the repo, do: conda env create -f environment.yml
 3. conda activate db
 4. python server.py
