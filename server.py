@@ -114,6 +114,23 @@ def logout():
     session['logout_message'] = "You have been logged out successfully!"
     return redirect(url_for('login'))
 
+@app.route("/<username>/change_permission", methods=['POST'])
+def change_permission(username):
+    if request.method == 'POST' and session.get("permission") == 'host':
+        new_username = request.form.get('username')
+        new_permission = request.form.get('permission')
+        try:
+            # Update the permission for the specified username
+            runstatement('''use Usrs''', commit=True)
+
+            runstatement(f'''UPDATE Usrs SET permission = "{new_permission}" WHERE usr_ID = "{new_username}"''', commit=True)
+            flash(f"Permission for {new_username} changed successfully to {new_permission}.")
+        except Exception as e:
+            flash(f"Error: {str(e)}", 'error')
+    else:
+        flash("Unauthorized to change permission.", 'error')
+    return redirect(url_for('profile', username=session['username']))
+
 @app.route("/registration", methods=['GET', 'POST'])
 def registration():
     if 'username' in session:
@@ -1269,5 +1286,4 @@ def change_password():
 
 
 if __name__ == "__main__":
-    # app.run(host="10.18.158.36", port= "8080", debug=True)
-    app.run(debug=True)
+    app.run(host="10.18.158.36", port= "8080", debug=True)
