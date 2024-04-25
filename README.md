@@ -27,3 +27,11 @@ TODO:
 Testing: 
 create new databses with XAMPP, import Criminal_Records.sql and usrs.sql. 
 after that, input all the commands
+
+Project Done and Presented in 04/24/2024
+
+To do a demo:
+1. clone the repo
+2. in the repo, do conda create -f environment.yml
+3. conda activate db
+4. python server.py
